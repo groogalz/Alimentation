@@ -115,7 +115,7 @@ C'est fini : chaque modification arrive sur l'autre appareil quelques secondes a
 
 ## Onglet Objectifs
 
-Renseigne ton profil (sexe, âge, taille, poids, et ta masse grasse si tu la connais), ton niveau d'activité et ton objectif (perte de poids, sèche, maintien, prise de masse). L'app :
+Renseigne ton profil (sexe, âge, taille, poids, et ta masse grasse si tu la connais), ton niveau d'activité et ton objectif (perte de poids, sèche, maintien, prise de masse). Pour le niveau d'activité, tu peux choisir une catégorie, ou « Détailler mes activités » : sommeil, travail, vie courante, trajets, marche et séances de sport par semaine, d'où l'app calcule ton PAL. L'app :
 
 - calcule ton métabolisme de repos avec plusieurs équations publiées et retient leur médiane ;
 - en déduit ta dépense quotidienne, puis ton apport cible selon le rythme visé ;

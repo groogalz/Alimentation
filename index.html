@@ -369,6 +369,36 @@ details.sources a{color:var(--c-l)}
   .res-kcal .big{font-size:3.1rem}
 }
 
+/* ---------- Niveau d'activité détaillé ---------- */
+.slider-head .lbl{font-weight:700}
+.pal-simple{display:grid;gap:4px}
+.act{display:grid;gap:10px;border:1px solid var(--rule);border-radius:6px;padding:12px;margin-top:4px}
+.act-h{margin:6px 0 0;font-weight:700;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.act-h:first-child{margin-top:0}
+.act-h small{font-weight:400;color:var(--muted);font-size:.85rem}
+.act-row{display:grid;grid-template-columns:minmax(0,1fr) 7.2rem;gap:6px 10px;align-items:center}
+.act-row > label{font-size:.97rem}
+.act-row > .seg-row{grid-column:1/-1}
+.act .chip{padding:6px 11px;font-size:.85rem}
+.act-sports{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.act-sports:empty{display:none}
+.act-sports li{border:1px solid var(--rule);border-radius:4px;padding:10px;display:grid;gap:8px;background:var(--panel)}
+.sp-top{display:flex;gap:6px;align-items:center}
+.sel{flex:1;min-width:0;width:100%;font:inherit;font-size:1rem;padding:10px 8px;border:1.5px solid var(--muted);border-radius:4px;background:var(--panel);color:var(--ink)}
+.sel:focus-visible{outline:3px solid var(--c-l);outline-offset:1px}
+.sp-nums{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.sp-nums.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sp-nums label{font-size:.8rem;font-weight:700;margin-bottom:3px;display:block}
+.sp-meta{margin:0;font-size:.82rem;color:var(--muted)}
+.act-table{width:100%;border-collapse:collapse;font-size:.86rem}
+.act-table th{text-align:right;font-weight:400;color:var(--muted);font-size:.75rem;padding:0 0 4px}
+.act-table th:first-child{text-align:left}
+.act-table td{padding:5px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
+.act-table td:not(:first-child){text-align:right;white-space:nowrap;padding-left:8px;font-family:var(--display);font-stretch:85%;font-variant-numeric:tabular-nums}
+.act-table tr.rest td{color:var(--muted)}
+.act-table tr.tot td{border-top:3px solid var(--ink);border-bottom:0;font-weight:700}
+@media (max-width:420px){ .sp-nums.three{grid-template-columns:repeat(2,minmax(0,1fr))} }
+
 @media (max-width:420px){
   .energy-v .num{font-size:3.6rem}
   .label-title{font-size:1.9rem}
@@ -535,13 +565,43 @@ details.sources a{color:var(--c-l)}
           <div class="field"><label for="g-weight">Poids</label><div class="unit-in"><input id="g-weight" inputmode="decimal" autocomplete="off" enterkeyhint="next"><span>kg</span></div></div>
           <div class="field"><label for="g-bf">Masse grasse <small>facultatif</small></label><div class="unit-in"><input id="g-bf" inputmode="decimal" autocomplete="off" enterkeyhint="done"><span>%</span></div></div>
         </div>
-        <div class="slider">
-          <div class="slider-head"><label for="g-pal">Niveau d'activité</label><span class="val" id="g-pal-v"></span></div>
-          <input type="range" class="range" id="g-pal" min="1.2" max="2.4" step="0.05">
-          <div class="seg-row">
-            <button type="button" class="chip" data-pal="1.55">Sédentaire ou léger</button>
-            <button type="button" class="chip" data-pal="1.85">Actif</button>
-            <button type="button" class="chip" data-pal="2.2">Très actif</button>
+        <div class="slider" id="pal-block">
+          <div class="slider-head"><span class="lbl">Niveau d'activité</span><span class="val" id="g-pal-v"></span></div>
+          <div class="seg-row" role="group" aria-label="Façon d'indiquer ton activité">
+            <button type="button" class="chip" data-palmode="simple" aria-pressed="true">Choix rapide</button>
+            <button type="button" class="chip" data-palmode="detail" aria-pressed="false">Détailler mes activités</button>
+          </div>
+          <div id="pal-simple" class="pal-simple">
+            <input type="range" class="range" id="g-pal" min="1.2" max="2.4" step="0.05" aria-label="Niveau d'activité (PAL)">
+            <div class="seg-row">
+              <button type="button" class="chip" data-pal="1.55">Sédentaire ou léger</button>
+              <button type="button" class="chip" data-pal="1.85">Actif</button>
+              <button type="button" class="chip" data-pal="2.2">Très actif</button>
+            </div>
+          </div>
+          <div id="pal-detail" class="act" hidden>
+            <p class="act-h">Une journée type <small>en moyenne sur la semaine</small></p>
+            <div class="act-row"><label for="a-sleep">Sommeil</label><div class="unit-in"><input id="a-sleep" inputmode="decimal" autocomplete="off"><span>h</span></div></div>
+            <div class="act-row"><label for="a-work">Travail ou études</label><div class="unit-in"><input id="a-work" inputmode="decimal" autocomplete="off"><span>h</span></div>
+              <div class="seg-row" role="group" aria-label="Type de travail">
+                <button type="button" class="chip" data-worktype="assis">Assis</button>
+                <button type="button" class="chip" data-worktype="debout">Debout</button>
+                <button type="button" class="chip" data-worktype="physique">Physique</button>
+              </div>
+            </div>
+            <div class="act-row"><label for="a-life">Toilette, repas, cuisine</label><div class="unit-in"><input id="a-life" inputmode="decimal" autocomplete="off"><span>h</span></div></div>
+            <div class="act-row"><label for="a-chores">Ménage, courses</label><div class="unit-in"><input id="a-chores" inputmode="decimal" autocomplete="off"><span>h</span></div></div>
+            <div class="act-row"><label for="a-commute">Trajets assis</label><div class="unit-in"><input id="a-commute" inputmode="numeric" autocomplete="off"><span>min</span></div>
+              <div class="seg-row" role="group" aria-label="Moyen de transport">
+                <button type="button" class="chip" data-commutetype="voiture">Voiture</button>
+                <button type="button" class="chip" data-commutetype="transports">Bus, train</button>
+              </div>
+            </div>
+            <div class="act-row"><label for="a-walk">Marche (déplacements)</label><div class="unit-in"><input id="a-walk" inputmode="numeric" autocomplete="off"><span>min</span></div></div>
+            <p class="act-h">Sport <small>par semaine</small></p>
+            <ul class="act-sports" id="a-sports"></ul>
+            <div class="btn-row"><button type="button" class="btn small" id="a-add">+ Ajouter un sport</button></div>
+            <div id="a-result"></div>
           </div>
           <p class="reco" id="g-pal-reco"></p>
         </div>
@@ -612,7 +672,8 @@ details.sources a{color:var(--c-l)}
           <li>Roza AM, Shizgal HM (1984). The Harris Benedict equation reevaluated. <i>Am J Clin Nutr</i> 40:168-182. <a href="https://doi.org/10.1093/ajcn/40.1.168">doi:10.1093/ajcn/40.1.168</a></li>
           <li>Black AE et al. (1996). Human energy expenditure in affluent societies: an analysis of 574 doubly-labelled water measurements. <i>Eur J Clin Nutr</i> 50:72-92.</li>
           <li>Schofield WN (1985). Predicting basal metabolic rate, new standards and review of previous work. <i>Hum Nutr Clin Nutr</i> 39 Suppl 1:5-41 ; équations reprises par FAO/OMS/UNU (2004), <i>Human energy requirements</i>, tableau 5.2. <a href="https://www.fao.org/4/y5686e/y5686e07.htm">fao.org</a></li>
-          <li>FAO/OMS/UNU (2004). <i>Human energy requirements</i>, chapitre 5 : catégories de niveau d'activité physique (PAL). <a href="https://www.fao.org/4/y5686e/y5686e07.htm">fao.org</a></li>
+          <li>FAO/OMS/UNU (2004). <i>Human energy requirements</i>, chapitre 5 : catégories de niveau d'activité physique (PAL) et coefficients des activités courantes (tableau 5.1). <a href="https://www.fao.org/4/y5686e/y5686e07.htm">fao.org</a></li>
+          <li>Herrmann SD et al. (2024). 2024 Adult Compendium of Physical Activities: a third update of the energy costs of human activities. <i>J Sport Health Sci</i> 13(1):6-12. <a href="https://doi.org/10.1016/j.jshs.2023.10.010">doi:10.1016/j.jshs.2023.10.010</a> ; valeurs MET sur <a href="https://pacompendium.com/">pacompendium.com</a></li>
           <li>Cunningham JJ (1980). A reanalysis of the factors influencing basal metabolic rate in normal adults. <i>Am J Clin Nutr</i> 33:2372-2374.</li>
           <li>ten Haaf T, Weijs PJM (2014). Resting energy expenditure prediction in recreational athletes of 18–35 years. <i>PLoS One</i> 9(10):e108460. <a href="https://doi.org/10.1371/journal.pone.0108460">doi:10.1371/journal.pone.0108460</a></li>
           <li>Hall KD (2008). What is the required energy deficit per unit weight loss? <i>Int J Obes</i> 32:573-576. <a href="https://doi.org/10.1038/sj.ijo.0803720">doi:10.1038/sj.ijo.0803720</a></li>
@@ -685,7 +746,7 @@ details.sources a{color:var(--c-l)}
 <script src="config.js"></script>
 <script type="module">
 'use strict';
-const APP_VERSION = '1.2.0';
+const APP_VERSION = '1.3.0';
 const FIREBASE_VERSION = '10.12.2';
 const $ = (id) => document.getElementById(id);
 const LS_KEY = 'carnet-macros:v1';
@@ -1492,7 +1553,7 @@ const fmtDate = (s, long) => new Intl.DateTimeFormat('fr-FR', long ? { weekday: 
 
 function defaultGoals(){
   return { profile: { sex: 'm', age: null, height: null, weight: null, bf: null, pal: 1.55 },
-    goal: 'maintien', rate: 0, pPerKg: 1.8, fatPct: 25, fiber: 30, showInDay: true, weights: [] };
+    goal: 'maintien', rate: 0, pPerKg: 1.8, fatPct: 25, fiber: 30, showInDay: true, weights: [], activity: defaultActivity() };
 }
 function numOrNull(x, lo, hi){
   if (x === null || x === undefined || x === '') return null;
@@ -1507,8 +1568,9 @@ function sanitizeGoals(o){
     sex: pr.sex === 'f' ? 'f' : 'm',
     age: numOrNull(pr.age, 10, 110), height: numOrNull(pr.height, 100, 250),
     weight: numOrNull(pr.weight, 25, 350), bf: numOrNull(pr.bf, 2, 70),
-    pal: numOrNull(pr.pal, 1.2, 2.4) || 1.55
+    pal: numOrNull(pr.pal, 1.2, 2.5) || 1.55
   };
+  d.activity = sanitizeActivity(o.activity);
   d.goal = GOALS[o.goal] ? o.goal : 'maintien';
   const r = numOrNull(o.rate, -1, 0.75); d.rate = r == null ? GOALS[d.goal].rate : r;
   d.pPerKg = numOrNull(o.pPerKg, 0.8, 3.2) || GOALS[d.goal].p;
@@ -1592,6 +1654,7 @@ function fillGoalInputs(){
   setIf('g-weight', toField(pr.weight)); setIf('g-bf', toField(pr.bf));
   setIf('g-pal', pr.pal); setIf('g-rate', g.rate); setIf('g-prot', g.pPerKg); setIf('g-fat', g.fatPct);
   $('g-show').checked = g.showInDay;
+  fillActivityInputs();
   const wd = $('w-date'); wd.max = todayStr(); if (!wd.value) wd.value = todayStr();
 }
 function renderGoalOutputs(){
@@ -1601,9 +1664,16 @@ function renderGoalOutputs(){
   document.querySelectorAll('[data-pal]').forEach((b) => b.setAttribute('aria-pressed', String(palCategory(+b.dataset.pal) === palCategory(pr.pal))));
 
   // Activité
-  $('g-pal-v').textContent = 'PAL ' + nfFix(pr.pal, 2) + ' · ' + palCategory(pr.pal);
+  const detail = g.activity.mode === 'detail';
+  document.querySelectorAll('[data-palmode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.palmode === g.activity.mode)));
+  $('pal-simple').hidden = detail; $('pal-detail').hidden = !detail;
+  $('g-pal-v').textContent = 'PAL ' + nfFix(pr.pal, 2) + ' · ' + palCategory(pr.pal) + (detail ? ' (calculé)' : '');
   const pb = palBand(pr.pal); setTrack($('g-pal'), pb[0], pb[1]);
-  $('g-pal-reco').innerHTML = 'Repères FAO/OMS/UNU (2004) : <b>1,40–1,69</b> sédentaire ou léger, <b>1,70–1,99</b> actif, <b>2,00–2,40</b> très actif ; au-delà de 2,40, difficile à tenir dans la durée. Le PAL inclut déjà ton sport : n’ajoute pas les calories de tes séances.';
+  if (detail) renderActivityResult();
+  $('g-pal-reco').innerHTML = (detail
+    ? 'Méthode FAO/OMS/UNU (2004) : chaque activité a un coefficient (multiple du métabolisme de base) ; le PAL est la moyenne de ces coefficients sur 24 h. Vie courante : coefficients du tableau 5.1 de la FAO. Sport : valeurs MET du Compendium des activités physiques <span class="cite">(Herrmann et al., 2024)</span>, une approximation puisque le MET est standardisé à 3,5 mL d\u2019oxygène par kg et par minute. '
+    : 'Pour un calcul plus précis, choisis « Détailler mes activités ». ') +
+    'Repères FAO : <b>1,40–1,69</b> sédentaire ou léger, <b>1,70–1,99</b> actif, <b>2,00–2,40</b> très actif. Le PAL inclut déjà ton sport : n\u2019ajoute pas les calories de tes séances.';
 
   // Dépense
   if (!plan) {
@@ -1748,6 +1818,137 @@ function renderWeights(plan){
   box.innerHTML = svg + '<div class="legend"><span><i></i>moyenne sur 7 jours (' + nfFix(la.kg, 1) + ' kg)</span><span><i class="g"></i>rythme visé</span><span>• pesées</span></div>';
 }
 
+
+/* ----- Niveau d'activité détaillé -----
+   Vie courante : coefficients (multiples du métabolisme de base) du tableau 5.1 de FAO/OMS/UNU (2004).
+   Sport : valeurs MET du Compendium des activités physiques (Herrmann et al., 2024), utilisées comme
+   multiples du métabolisme de repos. PAL = somme (heures × coefficient) sur 24 h, divisée par 24. */
+const WORK = {
+  assis:    { label: 'assis', long: 'Assis (bureau, études)', par: 1.5 },
+  debout:   { label: 'debout', long: 'Debout, charges légères', par: 2.2 },
+  physique: { label: 'physique', long: 'Travail physique', par: 4.1 }
+};
+const COMMUTE = {
+  voiture:     { label: 'en voiture', long: 'Voiture', par: 2.0 },
+  transports:  { label: 'en transports', long: 'Bus, train', par: 1.2 }
+};
+const PAR_SLEEP = 1.0, PAR_LIFE = (2.3 + 1.5 + 2.1) / 3, PAR_CHORES = 2.8, PAR_WALK = 3.2, PAR_REST = 1.4;
+const SPORTS = [
+  { id: 'muscu',     label: 'Musculation intense (haltéro, force)', met: 6.0, ref: 'code 02050' },
+  { id: 'muscu_mod', label: 'Musculation modérée (8 à 15 rép.)', met: 3.5, ref: 'code 02054' },
+  { id: 'circuit',   label: 'Circuit training, kettlebells', met: 7.5, ref: 'code 02040' },
+  { id: 'velo100',   label: 'Vélo d’appart., 90 à 100 W', met: 6.0, ref: 'code 01220' },
+  { id: 'velo125',   label: 'Vélo d’appart., 101 à 125 W', met: 6.8, ref: 'code 01224' },
+  { id: 'velo150',   label: 'Vélo d’appart., 126 à 150 W', met: 8.0, ref: 'code 01228' },
+  { id: 'velo199',   label: 'Vélo d’appart., 151 à 199 W', met: 10.3, ref: 'code 01232' },
+  { id: 'velo229',   label: 'Vélo d’appart., 200 à 229 W', met: 10.8, ref: 'code 01236' },
+  { id: 'spin',      label: 'Cours de vélo (RPM)', met: 9.0, ref: 'code 01270' },
+  { id: 'ellip_mod', label: 'Elliptique, modéré', met: 5.0, ref: 'code 02048' },
+  { id: 'ellip_int', label: 'Elliptique, intense', met: 9.0, ref: 'code 02049' },
+  { id: 'rameur',    label: 'Rameur, 150 à 199 W', met: 11.0, ref: 'code 02073' },
+  { id: 'marche_r',  label: 'Marche rapide (5,6 à 6,3 km/h)', met: 4.8, ref: 'code 17200' },
+  { id: 'jogging',   label: 'Footing, allure libre', met: 7.5, ref: 'code 12020' },
+  { id: 'course8',   label: 'Course à pied, 8 km/h', met: 8.5, ref: 'code 12030' },
+  { id: 'course10',  label: 'Course à pied, 10 km/h', met: 9.3, ref: 'code 12050' },
+  { id: 'course12',  label: 'Course à pied, 12 km/h', met: 11.8, ref: 'code 12080' },
+  { id: 'natation',  label: 'Natation, crawl rapide', met: 9.8, ref: 'Compendium 2024' },
+  { id: 'foot',      label: 'Football loisir', met: 7.0, ref: 'Compendium 2024' },
+  { id: 'yoga',      label: 'Yoga (hatha)', met: 2.5, ref: 'Compendium 2011' },
+  { id: 'autre',     label: 'Autre (valeur MET)', met: null, ref: 'pacompendium.com' }
+];
+const SPORT_BY_ID = Object.fromEntries(SPORTS.map((s) => [s.id, s]));
+function defaultActivity(){
+  return { mode: 'simple', sleep: 8, work: 0, workType: 'assis', life: 3, chores: 0.5, commuteMin: 0, commuteType: 'voiture', walkMin: 30, sports: [] };
+}
+function sanitizeActivity(a){
+  const d = defaultActivity();
+  if (!a || typeof a !== 'object') return d;
+  const pick = (v, lo, hi, def) => { const n = numOrNull(v, lo, hi); return n == null ? def : n; };
+  return {
+    mode: a.mode === 'detail' ? 'detail' : 'simple',
+    sleep: pick(a.sleep, 0, 16, d.sleep), work: pick(a.work, 0, 16, d.work), workType: WORK[a.workType] ? a.workType : 'assis',
+    life: pick(a.life, 0, 12, d.life), chores: pick(a.chores, 0, 12, d.chores),
+    commuteMin: pick(a.commuteMin, 0, 600, d.commuteMin), commuteType: COMMUTE[a.commuteType] ? a.commuteType : 'voiture',
+    walkMin: pick(a.walkMin, 0, 900, d.walkMin),
+    sports: (Array.isArray(a.sports) ? a.sports : []).filter((s) => s && typeof s.id === 'string').slice(0, 20).map((s) => ({
+      id: s.id.slice(0, 40), type: SPORT_BY_ID[s.type] ? s.type : 'autre',
+      perWeek: pick(s.perWeek, 0, 21, 0), minutes: pick(s.minutes, 0, 600, 0), met: numOrNull(s.met, 1, 25)
+    }))
+  };
+}
+const sportMet = (s) => s.type === 'autre' ? (s.met || 0) : SPORT_BY_ID[s.type].met;
+function activityBreakdown(a){
+  const rows = [];
+  const add = (label, h, par, extra) => { if (h > 0) rows.push(Object.assign({ label, h, par }, extra || {})); };
+  add('Sommeil', a.sleep, PAR_SLEEP);
+  add('Travail ou études, ' + WORK[a.workType].label, a.work, WORK[a.workType].par);
+  add('Toilette, repas, cuisine', a.life, PAR_LIFE);
+  add('Ménage, courses', a.chores, PAR_CHORES);
+  add('Trajets ' + COMMUTE[a.commuteType].label, a.commuteMin / 60, COMMUTE[a.commuteType].par);
+  add('Marche', a.walkMin / 60, PAR_WALK);
+  a.sports.forEach((s) => { const met = sportMet(s); if (met) add(SPORT_BY_ID[s.type].label, s.perWeek * s.minutes / 60 / 7, met, { sport: true }); });
+  const used = rows.reduce((t, r) => t + r.h, 0);
+  if (used < 24) rows.push({ label: 'Le reste : assis, écrans, loisirs calmes', h: 24 - used, par: PAR_REST, rest: true });
+  const sum = rows.reduce((t, r) => t + r.h * r.par, 0);
+  return { rows, used, over: used > 24.001, sum, pal: sum / 24 };
+}
+function applyActivityPal(){
+  const a = state.goals.activity; if (a.mode !== 'detail') return;
+  const b = activityBreakdown(a);
+  if (!b.over) state.goals.profile.pal = Math.round(Math.min(2.5, Math.max(1.2, b.pal)) * 100) / 100;
+}
+let sportsSig = '';
+function renderSportsList(force){
+  const a = state.goals.activity, ul = $('a-sports');
+  const sig = a.sports.map((s) => s.id + ':' + s.type).join('|');
+  if (force || sig !== sportsSig) {
+    sportsSig = sig;
+    ul.innerHTML = a.sports.map((s) => {
+      const id = esc(s.id);
+      const opts = SPORTS.map((d) => '<option value="' + d.id + '"' + (d.id === s.type ? ' selected' : '') + '>' + esc(d.label) + '</option>').join('');
+      return '<li data-sid="' + id + '">' +
+        '<div class="sp-top"><label class="sr" for="sp-type-' + id + '">Activité</label><select class="sel" id="sp-type-' + id + '" data-f="type">' + opts + '</select>' +
+        '<button type="button" class="icon-btn" data-f="del" aria-label="Retirer cette activité">×</button></div>' +
+        '<div class="sp-nums' + (s.type === 'autre' ? ' three' : '') + '">' +
+          '<div class="field"><label for="sp-pw-' + id + '">Séances par semaine</label><div class="unit-in"><input id="sp-pw-' + id + '" data-f="perWeek" inputmode="decimal" autocomplete="off"></div></div>' +
+          '<div class="field"><label for="sp-min-' + id + '">Durée d’une séance</label><div class="unit-in"><input id="sp-min-' + id + '" data-f="minutes" inputmode="numeric" autocomplete="off"><span>min</span></div></div>' +
+          (s.type === 'autre' ? '<div class="field"><label for="sp-met-' + id + '">Valeur MET</label><div class="unit-in"><input id="sp-met-' + id + '" data-f="met" inputmode="decimal" autocomplete="off"></div></div>' : '') +
+        '</div><p class="sp-meta" id="sp-meta-' + id + '"></p></li>';
+    }).join('');
+  }
+  const act = document.activeElement;
+  a.sports.forEach((s) => {
+    const set = (pre, v) => { const el = $(pre + s.id); if (el && el !== act) { el.value = toField(v); el.parentNode.classList.remove('bad'); } };
+    set('sp-pw-', s.perWeek); set('sp-min-', s.minutes); if (s.type === 'autre') set('sp-met-', s.met);
+  });
+}
+function fillActivityInputs(){
+  const a = state.goals.activity, act = document.activeElement;
+  const set = (id, v) => { const el = $(id); if (el && el !== act) { el.value = toField(v); el.parentNode.classList.remove('bad'); } };
+  set('a-sleep', a.sleep); set('a-work', a.work); set('a-life', a.life); set('a-chores', a.chores);
+  set('a-commute', a.commuteMin); set('a-walk', a.walkMin);
+  renderSportsList();
+}
+function renderActivityResult(){
+  const a = state.goals.activity, b = activityBreakdown(a);
+  document.querySelectorAll('[data-worktype]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.worktype === a.workType)));
+  document.querySelectorAll('[data-commutetype]').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.commutetype === a.commuteType)));
+  a.sports.forEach((s) => {
+    const el = $('sp-meta-' + s.id); if (!el) return;
+    const met = sportMet(s), hWeek = s.perWeek * s.minutes / 60;
+    el.textContent = nfFix(hWeek, hWeek < 10 ? 1 : 0) + ' h par semaine · ' + (met ? 'MET ' + nfFix(met, 1) + ' · ' + SPORT_BY_ID[s.type].ref : 'indique la valeur MET');
+  });
+  const fmtH = (h) => h >= 1 ? nfFix(h, 1) + ' h' : nf0.format(h * 60) + ' min';
+  const rows = b.rows.map((r) => '<tr' + (r.rest ? ' class="rest"' : '') + '><td>' + esc(r.label) + '</td><td>' + fmtH(r.h) + '</td><td>× ' + nf2.format(r.par) + '</td><td>' + nfFix(r.h * r.par, 1) + '</td></tr>').join('');
+  $('a-result').innerHTML = b.over
+    ? '<p class="note bad">Ta journée dépasse 24 h (' + nfFix(b.used, 1) + ' h) : réduis une durée pour calculer ton niveau d’activité.</p>'
+    : '<table class="act-table"><thead><tr><th>Par jour en moyenne</th><th>Durée</th><th>Coef.</th><th>Total</th></tr></thead><tbody>' + rows +
+      '<tr class="tot"><td>24 h</td><td></td><td></td><td>' + nfFix(b.sum, 1) + '</td></tr></tbody></table>' +
+      '<p class="tdee">PAL = ' + nfFix(b.sum, 1) + ' ÷ 24 = <b>' + nfFix(b.pal, 2) + '</b> · ' + palCategory(b.pal) + '</p>' +
+      (b.pal > 2.4 ? '<p class="note">Au-delà de 2,40, la FAO juge ce niveau difficile à tenir dans la durée : vérifie tes durées.</p>' : '') +
+      '<p class="reco">Le sport est compté en moyenne sur 7 jours (séances × durée ÷ 7). Les heures non renseignées sont comptées comme du temps assis calme.</p>';
+}
+
 /* ----- Saisie ----- */
 function goalsChanged(){ renderGoalOutputs(); renderTotals(); save('goals'); }
 function applyGoalPreset(key){
@@ -1795,6 +1996,63 @@ $('w-list').addEventListener('click', (e) => {
   g.weights = g.weights.filter((w) => w.d !== b.dataset.wdel);
   goalsChanged();
   toast('Pesée supprimée', { label: 'Annuler', fn: () => { g.weights = before; g.profile.weight = beforeW; fillGoalInputs(); goalsChanged(); } });
+});
+
+
+/* ----- Saisie : activité détaillée ----- */
+const sportById = (sid) => state.goals.activity.sports.find((s) => s.id === sid) || null;
+function activityChanged(){ applyActivityPal(); goalsChanged(); }
+document.querySelectorAll('[data-palmode]').forEach((b) => b.addEventListener('click', () => {
+  const g = state.goals; g.activity.mode = b.dataset.palmode;
+  if (g.activity.mode === 'detail') { fillActivityInputs(); applyActivityPal(); }
+  else $('g-pal').value = g.profile.pal;
+  goalsChanged();
+}));
+[['a-sleep', 'sleep', 0, 16, 2], ['a-work', 'work', 0, 16, 2], ['a-life', 'life', 0, 12, 2], ['a-chores', 'chores', 0, 12, 2], ['a-commute', 'commuteMin', 0, 600, 0], ['a-walk', 'walkMin', 0, 900, 0]].forEach(([id, key, lo, hi, dec]) => {
+  const el = $(id);
+  const read = () => {
+    const raw = el.value.trim(); if (raw === '') return { ok: true, v: 0 };
+    const n = parseNum(raw);
+    return Number.isFinite(n) && n >= lo && n <= hi ? { ok: true, v: dec ? Math.round(n * 100) / 100 : Math.round(n) } : { ok: false };
+  };
+  el.addEventListener('input', () => { const r = read(); if (r.ok) { el.parentNode.classList.remove('bad'); state.goals.activity[key] = r.v; activityChanged(); } });
+  el.addEventListener('change', () => { el.parentNode.classList.toggle('bad', !read().ok); });
+});
+document.querySelectorAll('[data-worktype]').forEach((b) => b.addEventListener('click', () => { state.goals.activity.workType = b.dataset.worktype; activityChanged(); }));
+document.querySelectorAll('[data-commutetype]').forEach((b) => b.addEventListener('click', () => { state.goals.activity.commuteType = b.dataset.commutetype; activityChanged(); }));
+$('a-add').addEventListener('click', () => {
+  const a = state.goals.activity; if (a.sports.length >= 20) return;
+  const s = { id: newId(), type: 'muscu', perWeek: 3, minutes: 60, met: null };
+  a.sports.push(s); renderSportsList(); activityChanged();
+  const sel = $('sp-type-' + s.id); if (sel) sel.focus();
+});
+const SPORT_LIMITS = { perWeek: [0, 21], minutes: [0, 600], met: [1, 25] };
+function readSportField(el){
+  const f = el.dataset.f, lim = SPORT_LIMITS[f], raw = el.value.trim();
+  if (raw === '') return { ok: true, v: f === 'met' ? null : 0 };
+  const n = parseNum(raw);
+  return Number.isFinite(n) && n >= lim[0] && n <= lim[1] ? { ok: true, v: f === 'minutes' ? Math.round(n) : Math.round(n * 10) / 10 } : { ok: false };
+}
+$('a-sports').addEventListener('input', (e) => {
+  const el = e.target, f = el.dataset.f; if (!SPORT_LIMITS[f]) return;
+  const s = sportById(el.closest('li').dataset.sid); if (!s) return;
+  const r = readSportField(el); if (!r.ok) return;
+  el.parentNode.classList.remove('bad'); s[f] = r.v; activityChanged();
+});
+$('a-sports').addEventListener('change', (e) => {
+  const el = e.target, f = el.dataset.f;
+  if (SPORT_LIMITS[f]) { el.parentNode.classList.toggle('bad', !readSportField(el).ok); return; }
+  if (f !== 'type') return;
+  const s = sportById(el.closest('li').dataset.sid); if (!s) return;
+  s.type = SPORT_BY_ID[el.value] ? el.value : 'autre';
+  renderSportsList(); activityChanged();
+  const sel = $('sp-type-' + s.id); if (sel) sel.focus();
+});
+$('a-sports').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-f="del"]'); if (!b) return;
+  const a = state.goals.activity, sid = b.closest('li').dataset.sid, before = a.sports.map((x) => ({ ...x }));
+  a.sports = a.sports.filter((x) => x.id !== sid); renderSportsList(); activityChanged();
+  toast('Activité retirée', { label: 'Annuler', fn: () => { state.goals.activity.sports = before; renderSportsList(); activityChanged(); } });
 });
 
 /* =========================================================

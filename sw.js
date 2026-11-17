@@ -1,6 +1,6 @@
 // Service worker de Carnet Macros : permet d'ouvrir l'app sans réseau.
 // À chaque nouvelle version de l'app, change le numéro ci-dessous pour vider l'ancien cache.
-const CACHE = 'carnet-macros-v1.2.0';
+const CACHE = 'carnet-macros-v1.3.0';
 const SHELL = ['./', './index.html', './config.js', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 
