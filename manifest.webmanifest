@@ -1,0 +1,17 @@
+{
+  "name": "Carnet Macros",
+  "short_name": "Macros",
+  "description": "Suivi des macros de la journée : aliments, grammages, kcal, protéines, glucides, lipides, fibres.",
+  "lang": "fr",
+  "start_url": "./#journee",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#e3e7e4",
+  "theme_color": "#e3e7e4",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
