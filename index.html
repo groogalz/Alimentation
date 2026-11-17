@@ -32,6 +32,7 @@
   --c-l:#2768a8;
   --c-f:#3f7f33;
   --danger:#b3261e;
+  --band:color-mix(in srgb,var(--c-f) 55%,var(--panel));
   --display:"Archivo","Arial Narrow","Helvetica Neue",Arial,sans-serif;
   --body:"Atkinson Hyperlegible","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --nav-h:62px;
@@ -82,7 +83,7 @@ button,a{touch-action:manipulation}
 body[data-tab="compte"] .mini{display:none}
 
 /* ---------- Barre d'onglets du bas ---------- */
-.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--panel);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(3,1fr);padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--panel);border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(4,1fr);padding:0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
 .bnav a{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;height:var(--nav-h);font-size:.8rem;font-weight:700;color:var(--muted);text-decoration:none}
 .bnav a svg{width:24px;height:24px}
 .bnav a[aria-selected="true"]{color:var(--ink)}
@@ -94,7 +95,8 @@ body[data-tab="compte"] .mini{display:none}
 .pane{min-width:0}
 body:not([data-tab="journee"]) #pane-journee,
 body:not([data-tab="aliments"]) #pane-aliments,
-body:not([data-tab="compte"]) #pane-compte{display:none}
+body:not([data-tab="compte"]) #pane-compte,
+body:not([data-tab="objectifs"]) #pane-objectifs{display:none}
 @media (max-width:859px){
   .label-wrap{order:2}
   body:not([data-tab="journee"]) .label-wrap{display:none}
@@ -203,7 +205,7 @@ button.r-name{background:none;border:0;padding:0;text-align:left;cursor:pointer;
 .f-base b{font-family:var(--display);font-stretch:85%;color:var(--ink);font-size:1.05rem}
 
 /* ---------- Compte ---------- */
-.cards{display:grid;gap:14px}
+.cards{display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
 .card{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px;display:grid;gap:12px}
 .card h2{font-family:var(--display);font-weight:900;font-stretch:65%;font-size:1.65rem;line-height:1;margin:0}
 .card p{margin:0}
@@ -239,7 +241,7 @@ dialog form{padding:18px 18px 16px;display:grid;gap:14px}
 fieldset.field{border:0;margin:0;padding:0;min-width:0}
 .txt,.unit-in{display:flex;align-items:center;border:1.5px solid var(--muted);border-radius:4px;background:var(--panel)}
 .txt:focus-within,.unit-in:focus-within{outline:3px solid var(--c-l);outline-offset:1px;border-color:var(--ink)}
-.txt input,.unit-in input{flex:1;min-width:0;border:0;background:transparent;padding:11px 10px;outline:none;font-size:1.05rem}
+.txt input,.unit-in input{flex:1;min-width:0;width:100%;border:0;background:transparent;padding:11px 10px;outline:none;font-size:1.05rem}
 .unit-in input{text-align:right;font-family:var(--display);font-stretch:88%;font-variant-numeric:tabular-nums;font-weight:700}
 .unit-in span{padding-right:10px;color:var(--muted)}
 .unit-in.bad{border-color:var(--danger)}
@@ -272,6 +274,101 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 .toast button{background:transparent;border:1.5px solid var(--panel);color:var(--panel);border-radius:4px;padding:6px 10px;font-weight:700;cursor:pointer;flex:none}
 @media (min-width:860px){ .toast{bottom:18px} }
 
+
+/* ---------- Objectifs ---------- */
+.seg-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--rule);background:var(--panel);border-radius:999px;padding:8px 13px;font-weight:700;font-size:.9rem;cursor:pointer;color:var(--ink);line-height:1.15}
+.chip:hover{border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.slider{display:grid;gap:4px}
+.slider + .slider,.slider + .calc,.calc + .calc{border-top:1px solid var(--rule);padding-top:12px}
+.slider-head,.calc-head{display:flex;justify-content:space-between;align-items:baseline;gap:4px 10px;flex-wrap:wrap}
+.slider-head label,.calc-head span:first-child{font-weight:700;display:flex;align-items:center;gap:7px}
+.slider-head .val,.calc-head .val{font-family:var(--display);font-weight:800;font-stretch:82%;font-size:1.2rem;font-variant-numeric:tabular-nums}
+.range{-webkit-appearance:none;appearance:none;width:100%;height:32px;background:transparent;margin:0;cursor:pointer;touch-action:pan-y}
+.range:focus-visible{outline:3px solid var(--c-l);outline-offset:2px}
+.range::-webkit-slider-runnable-track{height:10px;border-radius:5px;background:var(--track,var(--rule))}
+.range::-moz-range-track{height:10px;border-radius:5px;background:var(--track,var(--rule))}
+.range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:26px;height:26px;border-radius:50%;background:var(--ink);border:4px solid var(--panel);box-shadow:0 0 0 1.5px var(--ink);margin-top:-8px}
+.range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:var(--ink);border:4px solid var(--panel);box-shadow:0 0 0 1.5px var(--ink)}
+.reco{margin:0;font-size:.88rem;color:var(--muted);line-height:1.4}
+.reco b{color:var(--ink);font-weight:700}
+.reco .zone{display:inline-block;width:14px;height:8px;border-radius:2px;background:var(--band);vertical-align:middle;margin-right:4px}
+.cite{white-space:nowrap}
+.note{margin:0;font-size:.9rem;padding:8px 10px;border-left:4px solid var(--c-g);background:var(--hover);border-radius:0 4px 4px 0}
+.note.bad{border-left-color:var(--danger)}
+.notes{display:grid;gap:6px}
+.notes:empty{display:none}
+.res-kcal{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.res-kcal .big{font-family:var(--display);font-weight:900;font-stretch:62%;font-size:3.6rem;line-height:.9;font-variant-numeric:tabular-nums}
+.res-kcal span:last-child{color:var(--muted);font-weight:700}
+.tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.tile{border:1px solid var(--rule);border-radius:4px;padding:8px 6px;display:grid;gap:2px;text-align:center}
+.tile b{font-family:var(--display);font-weight:800;font-stretch:80%;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.tile span{font-size:.78rem;color:var(--muted);display:flex;gap:5px;align-items:center;justify-content:center}
+.check{display:flex;align-items:center;gap:10px;font-weight:700;cursor:pointer}
+.check input{width:20px;height:20px;accent-color:var(--ink)}
+.formula{width:100%;border-collapse:collapse;font-size:.93rem}
+.formula td{padding:7px 0;border-bottom:1px solid var(--rule);vertical-align:baseline}
+.formula td:last-child{text-align:right;font-family:var(--display);font-weight:700;font-stretch:85%;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:10px}
+.formula small{display:block;color:var(--muted);font-size:.78rem}
+.formula tr.off td{color:var(--muted)}
+.formula tr.off td:last-child{text-decoration:line-through}
+.formula tr.cons td{border-bottom:0;border-top:3px solid var(--ink);font-weight:700}
+.tdee{margin:0;font-size:1rem}
+.tdee b{font-family:var(--display);font-weight:900;font-stretch:70%;font-size:1.5rem}
+.w-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end}
+.w-form input[type="date"]{font-size:1rem;padding:10px;min-height:44px}
+.w-chart svg{display:block;width:100%;height:auto}
+.wc-grid{stroke:var(--rule);stroke-width:1}
+.wc-dot{fill:var(--muted)}
+.wc-avg{stroke:var(--ink);stroke-width:2.5;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.wc-goal{stroke:var(--c-f);stroke-width:2;fill:none;stroke-dasharray:6 5}
+.wc-last{fill:var(--ink);stroke:var(--panel);stroke-width:2}
+.wc-lbl{fill:var(--muted);font-size:11px;font-family:var(--body)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:16px;height:0;border-top:2.5px solid var(--ink);vertical-align:middle;margin-right:5px}
+.legend i.g{border-top:2px dashed var(--c-f)}
+.w-trend{margin:0}
+.w-list{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+.w-list li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px solid var(--rule)}
+.w-list .num{font-weight:700;font-size:1.05rem}
+.w-list .d{color:var(--muted);flex:1}
+.status{display:inline-block;font-size:.8rem;font-weight:700;border-radius:3px;padding:1px 7px;border:1.5px solid currentColor}
+.status.ok{color:var(--c-f)} .status.warn{color:var(--c-g)}
+details.sources summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.sources summary::-webkit-details-marker{display:none}
+details.sources summary::after{content:"+";font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1}
+details.sources[open] summary::after{content:"−"}
+details.sources ol{margin:0;padding-left:1.3em;display:grid;gap:7px;font-size:.88rem}
+details.sources a{color:var(--c-l)}
+/* Objectifs dans l'étiquette de la journée */
+.label .tgt{text-align:right;color:var(--muted);font-family:var(--display);font-stretch:85%;font-variant-numeric:tabular-nums;font-size:.98rem}
+.label:not(.has-t) .tgt,.label:not(.has-t) .bar,.label:not(.has-t) .energy-t{display:none}
+.label .lab-head .tgt{font-family:inherit;font-size:inherit;font-stretch:normal}
+.label.has-t .lab-head,.label.has-t .lab-row{grid-template-columns:1fr 4.2rem 4.4rem 2.9rem}
+.bar{grid-column:1/-1;display:block;height:5px;background:var(--hover);border-radius:3px;overflow:hidden;margin-top:2px}
+.bar i{display:block;height:100%;width:0;transition:width .3s ease}
+.m-p .bar i{background:var(--c-p)} .m-g .bar i{background:var(--c-g)} .m-l .bar i{background:var(--c-l)} .m-f .bar i{background:var(--c-f)}
+.energy-t{display:grid;gap:4px;margin-top:6px}
+.energy-t span:first-child{font-size:.9rem;color:var(--muted);font-weight:700}
+.energy-t .bar{height:8px;margin:0}
+.energy-t .bar i{background:var(--ink)}
+.energy-t .bar.over i{background:var(--danger)}
+.mini .tg{font-size:.6em;font-weight:700;color:var(--muted)}
+.mini-goal{display:none}
+@media (max-width:859px){
+  body[data-tab="objectifs"] .mini:not(.mini-goal){display:none}
+  body[data-tab="objectifs"] .mini-goal{display:flex}
+}
+@media (max-width:420px){
+  .w-form{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .w-form .btn{grid-column:1/-1}
+  .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .res-kcal .big{font-size:3.1rem}
+}
+
 @media (max-width:420px){
   .energy-v .num{font-size:3.6rem}
   .label-title{font-size:1.9rem}
@@ -290,16 +387,24 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
     <nav class="tabs" aria-label="Sections">
       <a href="#journee" data-tab="journee" aria-selected="true">Journée</a>
       <a href="#aliments" data-tab="aliments" aria-selected="false">Aliments <span class="count" data-food-count></span></a>
+      <a href="#objectifs" data-tab="objectifs" aria-selected="false">Objectifs</a>
       <a href="#compte" data-tab="compte" aria-selected="false">Compte</a>
     </nav>
     <a class="sync" id="sync" href="#compte" data-s="local">Sur cet appareil</a>
   </div>
   <div class="mini" aria-hidden="true">
-    <span class="mini-k"><span class="num" id="m-kcal">0</span> <small>kcal</small></span>
+    <span class="mini-k"><span class="num" id="m-kcal">0</span><span class="tg" id="m-kcal-t"></span> <small>kcal</small></span>
     <span class="mc p"><b>P</b><span class="num" id="m-p">0</span></span>
     <span class="mc g"><b>G</b><span class="num" id="m-g">0</span></span>
     <span class="mc l"><b>L</b><span class="num" id="m-l">0</span></span>
     <span class="mc f"><b>F</b><span class="num" id="m-f">0</span></span>
+  </div>
+  <div class="mini mini-goal" aria-hidden="true">
+    <span class="mini-k"><span class="num" id="mg-kcal">–</span> <small>kcal visées</small></span>
+    <span class="mc p"><b>P</b><span class="num" id="mg-p">–</span></span>
+    <span class="mc g"><b>G</b><span class="num" id="mg-g">–</span></span>
+    <span class="mc l"><b>L</b><span class="num" id="mg-l">–</span></span>
+    <span class="mc f"><b>F</b><span class="num" id="mg-f">–</span></span>
   </div>
 </header>
 
@@ -313,12 +418,13 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
         <span class="energy-k">Énergie</span>
         <span class="energy-v"><span class="num" id="t-kcal">0</span><span class="unit">kcal</span></span>
       </div>
+      <div class="energy-t"><span id="t-kcal-t"></span><span class="bar" id="br-kcal-w"><i id="br-kcal"></i></span></div>
       <div class="rule-md"></div>
-      <div class="lab-head"><span></span><span>grammes</span><span>% kcal</span></div>
-      <div class="lab-row m-p"><span class="lab-name"><i class="dot"></i>Protéines</span><span class="num" id="t-p">0</span><span class="num pct" id="pc-p">–</span></div>
-      <div class="lab-row m-g"><span class="lab-name"><i class="dot"></i>Glucides</span><span class="num" id="t-g">0</span><span class="num pct" id="pc-g">–</span></div>
-      <div class="lab-row m-l"><span class="lab-name"><i class="dot"></i>Lipides</span><span class="num" id="t-l">0</span><span class="num pct" id="pc-l">–</span></div>
-      <div class="lab-row m-f"><span class="lab-name"><i class="dot"></i>Fibres</span><span class="num" id="t-f">0</span><span class="num pct">–</span></div>
+      <div class="lab-head"><span></span><span>grammes</span><span class="tgt">objectif</span><span>% kcal</span></div>
+      <div class="lab-row m-p"><span class="lab-name"><i class="dot"></i>Protéines</span><span class="num" id="t-p">0</span><span class="tgt" id="tg-p"></span><span class="num pct" id="pc-p">–</span><span class="bar"><i id="br-p"></i></span></div>
+      <div class="lab-row m-g"><span class="lab-name"><i class="dot"></i>Glucides</span><span class="num" id="t-g">0</span><span class="tgt" id="tg-g"></span><span class="num pct" id="pc-g">–</span><span class="bar"><i id="br-g"></i></span></div>
+      <div class="lab-row m-l"><span class="lab-name"><i class="dot"></i>Lipides</span><span class="num" id="t-l">0</span><span class="tgt" id="tg-l"></span><span class="num pct" id="pc-l">–</span><span class="bar"><i id="br-l"></i></span></div>
+      <div class="lab-row m-f"><span class="lab-name"><i class="dot"></i>Fibres</span><span class="num" id="t-f">0</span><span class="tgt" id="tg-f"></span><span class="num pct">–</span><span class="bar"><i id="br-f"></i></span></div>
       <div class="rule-xl"></div>
       <div class="split" aria-hidden="true"><span class="p" id="sp-p" style="width:0"></span><span class="g" id="sp-g" style="width:0"></span><span class="l" id="sp-l" style="width:0"></span></div>
       <p class="label-note">Calcul : 4 kcal par gramme de protéines ou de glucides, 9 kcal par gramme de lipides. Les fibres ne sont pas comptées dans l'énergie.</p>
@@ -408,6 +514,119 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
       <p class="version">Carnet Macros · version <span id="app-version"></span></p>
     </div>
   </section>
+
+  <section class="pane" id="pane-objectifs" aria-label="Objectifs">
+    <div class="cards">
+      <section class="card" aria-labelledby="res-title">
+        <h2 id="res-title">Mon objectif du jour</h2>
+        <div id="res-body"></div>
+        <label class="check" for="g-show"><input type="checkbox" id="g-show"> Afficher ces objectifs dans ma journée</label>
+      </section>
+
+      <section class="card" aria-labelledby="prof-title">
+        <h2 id="prof-title">Profil</h2>
+        <div class="seg-row" role="group" aria-label="Sexe">
+          <button type="button" class="chip" data-sex="m" aria-pressed="true">Homme</button>
+          <button type="button" class="chip" data-sex="f" aria-pressed="false">Femme</button>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="g-age">Âge</label><div class="unit-in"><input id="g-age" inputmode="numeric" autocomplete="off" enterkeyhint="next"><span>ans</span></div></div>
+          <div class="field"><label for="g-height">Taille</label><div class="unit-in"><input id="g-height" inputmode="numeric" autocomplete="off" enterkeyhint="next"><span>cm</span></div></div>
+          <div class="field"><label for="g-weight">Poids</label><div class="unit-in"><input id="g-weight" inputmode="decimal" autocomplete="off" enterkeyhint="next"><span>kg</span></div></div>
+          <div class="field"><label for="g-bf">Masse grasse <small>facultatif</small></label><div class="unit-in"><input id="g-bf" inputmode="decimal" autocomplete="off" enterkeyhint="done"><span>%</span></div></div>
+        </div>
+        <div class="slider">
+          <div class="slider-head"><label for="g-pal">Niveau d'activité</label><span class="val" id="g-pal-v"></span></div>
+          <input type="range" class="range" id="g-pal" min="1.2" max="2.4" step="0.05">
+          <div class="seg-row">
+            <button type="button" class="chip" data-pal="1.55">Sédentaire ou léger</button>
+            <button type="button" class="chip" data-pal="1.85">Actif</button>
+            <button type="button" class="chip" data-pal="2.2">Très actif</button>
+          </div>
+          <p class="reco" id="g-pal-reco"></p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="exp-title">
+        <h2 id="exp-title">Dépense énergétique</h2>
+        <div id="exp-body"></div>
+      </section>
+
+      <section class="card" aria-labelledby="goal-title">
+        <h2 id="goal-title">Objectif</h2>
+        <div class="seg-row" role="group" aria-label="Objectif">
+          <button type="button" class="chip" data-goal="perte" aria-pressed="false">Perte de poids</button>
+          <button type="button" class="chip" data-goal="seche" aria-pressed="false">Sèche</button>
+          <button type="button" class="chip" data-goal="maintien" aria-pressed="true">Maintien</button>
+          <button type="button" class="chip" data-goal="masse" aria-pressed="false">Prise de masse</button>
+        </div>
+        <div class="slider">
+          <div class="slider-head"><label for="g-rate">Rythme visé</label><span class="val" id="g-rate-v"></span></div>
+          <input type="range" class="range" id="g-rate" min="-1" max="0.75" step="0.05">
+          <p class="reco" id="g-rate-reco"></p>
+        </div>
+      </section>
+
+      <section class="card" aria-labelledby="mac-title">
+        <h2 id="mac-title">Répartition</h2>
+        <div class="slider m-p">
+          <div class="slider-head"><label for="g-prot"><i class="dot"></i>Protéines</label><span class="val" id="g-prot-v"></span></div>
+          <input type="range" class="range" id="g-prot" min="0.8" max="3.2" step="0.1">
+          <p class="reco" id="g-prot-reco"></p>
+        </div>
+        <div class="slider m-l">
+          <div class="slider-head"><label for="g-fat"><i class="dot"></i>Lipides</label><span class="val" id="g-fat-v"></span></div>
+          <input type="range" class="range" id="g-fat" min="15" max="40" step="1">
+          <p class="reco" id="g-fat-reco"></p>
+        </div>
+        <div class="calc m-g">
+          <div class="calc-head"><span><i class="dot"></i>Glucides <small class="reco">le reste des calories</small></span><span class="val" id="g-carb-v"></span></div>
+          <p class="reco" id="g-carb-reco"></p>
+        </div>
+        <div class="calc m-f">
+          <div class="calc-head"><span><i class="dot"></i>Fibres</span><span class="val">30 g</span></div>
+          <p class="reco">Repère : 25 à 30 g par jour pour un adulte <span class="cite">(ANSES, 2016)</span>.</p>
+        </div>
+        <div class="notes" id="g-warn"></div>
+        <div class="btn-row"><button type="button" class="btn" id="g-reset">Revenir aux valeurs recommandées</button></div>
+      </section>
+
+      <section class="card" aria-labelledby="w-title">
+        <h2 id="w-title">Suivi du poids</h2>
+        <form class="w-form" id="w-form" novalidate>
+          <div class="field"><label for="w-date">Date</label><div class="txt"><input type="date" id="w-date"></div></div>
+          <div class="field"><label for="w-kg">Poids</label><div class="unit-in"><input id="w-kg" inputmode="decimal" autocomplete="off" enterkeyhint="done"><span>kg</span></div></div>
+          <button type="submit" class="btn primary">Enregistrer</button>
+        </form>
+        <p class="msg" id="w-msg" role="alert"></p>
+        <div class="w-chart" id="w-chart"></div>
+        <p class="w-trend" id="w-trend"></p>
+        <ul class="w-list" id="w-list"></ul>
+      </section>
+
+      <details class="card sources">
+        <summary><h2>Sources et limites</h2></summary>
+        <p class="muted">Ces équations donnent une moyenne : pour une personne donnée, l'écart avec la réalité peut être important. Le suivi du poids sert à corriger : si la tendance s'écarte du rythme visé pendant plusieurs semaines, ajuste l'objectif. Ce n'est pas un avis médical.</p>
+        <ol>
+          <li>Mifflin MD, St Jeor ST et al. (1990). A new predictive equation for resting energy expenditure in healthy individuals. <i>Am J Clin Nutr</i> 51:241-247. <a href="https://doi.org/10.1093/ajcn/51.2.241">doi:10.1093/ajcn/51.2.241</a></li>
+          <li>Roza AM, Shizgal HM (1984). The Harris Benedict equation reevaluated. <i>Am J Clin Nutr</i> 40:168-182. <a href="https://doi.org/10.1093/ajcn/40.1.168">doi:10.1093/ajcn/40.1.168</a></li>
+          <li>Black AE et al. (1996). Human energy expenditure in affluent societies: an analysis of 574 doubly-labelled water measurements. <i>Eur J Clin Nutr</i> 50:72-92.</li>
+          <li>Schofield WN (1985). Predicting basal metabolic rate, new standards and review of previous work. <i>Hum Nutr Clin Nutr</i> 39 Suppl 1:5-41 ; équations reprises par FAO/OMS/UNU (2004), <i>Human energy requirements</i>, tableau 5.2. <a href="https://www.fao.org/4/y5686e/y5686e07.htm">fao.org</a></li>
+          <li>FAO/OMS/UNU (2004). <i>Human energy requirements</i>, chapitre 5 : catégories de niveau d'activité physique (PAL). <a href="https://www.fao.org/4/y5686e/y5686e07.htm">fao.org</a></li>
+          <li>Cunningham JJ (1980). A reanalysis of the factors influencing basal metabolic rate in normal adults. <i>Am J Clin Nutr</i> 33:2372-2374.</li>
+          <li>ten Haaf T, Weijs PJM (2014). Resting energy expenditure prediction in recreational athletes of 18–35 years. <i>PLoS One</i> 9(10):e108460. <a href="https://doi.org/10.1371/journal.pone.0108460">doi:10.1371/journal.pone.0108460</a></li>
+          <li>Hall KD (2008). What is the required energy deficit per unit weight loss? <i>Int J Obes</i> 32:573-576. <a href="https://doi.org/10.1038/sj.ijo.0803720">doi:10.1038/sj.ijo.0803720</a></li>
+          <li>Helms ER, Aragon AA, Fitschen PJ (2014). Evidence-based recommendations for natural bodybuilding contest preparation. <i>J Int Soc Sports Nutr</i> 11:20. <a href="https://doi.org/10.1186/1550-2783-11-20">doi:10.1186/1550-2783-11-20</a></li>
+          <li>Garthe I et al. (2011). Effect of two different weight-loss rates on body composition and strength and power-related performance in elite athletes. <i>Int J Sport Nutr Exerc Metab</i> 21(2):97-104.</li>
+          <li>Iraki J et al. (2019). Nutrition recommendations for bodybuilders in the off-season. <i>Sports</i> 7(7):154. <a href="https://doi.org/10.3390/sports7070154">doi:10.3390/sports7070154</a></li>
+          <li>Jäger R et al. (2017). ISSN position stand: protein and exercise. <i>J Int Soc Sports Nutr</i> 14:20. <a href="https://doi.org/10.1186/s12970-017-0177-8">doi:10.1186/s12970-017-0177-8</a></li>
+          <li>Morton RW et al. (2018). Protein supplementation and resistance training-induced gains in muscle mass and strength: systematic review and meta-analysis. <i>Br J Sports Med</i> 52:376-384. <a href="https://doi.org/10.1136/bjsports-2017-097608">doi:10.1136/bjsports-2017-097608</a></li>
+          <li>Thomas DT, Erdman KA, Burke LM (2016). Nutrition and athletic performance (position conjointe ACSM, Academy of Nutrition and Dietetics, Dietitians of Canada). <i>Med Sci Sports Exerc</i> 48(3):543-568.</li>
+          <li>ANSES (2016). Actualisation des repères du PNNS : élaboration des références nutritionnelles.</li>
+        </ol>
+      </details>
+    </div>
+  </section>
 </main>
 
 <nav class="bnav" aria-label="Sections">
@@ -418,6 +637,10 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
   <a href="#aliments" data-tab="aliments" aria-selected="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
     Aliments<span class="count" data-food-count></span>
+  </a>
+  <a href="#objectifs" data-tab="objectifs" aria-selected="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+    Objectifs
   </a>
   <a href="#compte" data-tab="compte" aria-selected="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.8"/><path d="M4.5 20c1.2-3.6 4-5.3 7.5-5.3s6.3 1.7 7.5 5.3"/></svg>
@@ -462,7 +685,7 @@ fieldset.field{border:0;margin:0;padding:0;min-width:0}
 <script src="config.js"></script>
 <script type="module">
 'use strict';
-const APP_VERSION = '1.1.0';
+const APP_VERSION = '1.2.0';
 const FIREBASE_VERSION = '10.12.2';
 const $ = (id) => document.getElementById(id);
 const LS_KEY = 'carnet-macros:v1';
@@ -474,7 +697,7 @@ const SEED = {"foods":[{"id":"x01","name":"Fromage blanc","base":"g","p":7.5,"g"
 /* =========================================================
    État et outils
    ========================================================= */
-const state = { foods: [], day: [] };
+const state = { foods: [], day: [], goals: null };
 const nf0 = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 });
 const nf1 = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 });
 const nf2 = new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 });
@@ -535,9 +758,10 @@ const macrosHTML = (m, fmt = nf1) =>
    ========================================================= */
 function cacheLocal(){ lsSet(LS_KEY, JSON.stringify(state)); }
 function readLocal(){
+  state.goals = defaultGoals();
   const raw = lsGet(LS_KEY);
   if (raw) {
-    try { const o = JSON.parse(raw); state.foods = sanitizeFoods(o.foods); state.day = sanitizeDay(o.day); return; } catch (e) {}
+    try { const o = JSON.parse(raw); state.foods = sanitizeFoods(o.foods); state.day = sanitizeDay(o.day); state.goals = sanitizeGoals(o.goals); return; } catch (e) {}
   }
   if (SEED) { state.foods = sanitizeFoods(SEED.foods); state.day = sanitizeDay(SEED.day); cacheLocal(); }
 }
@@ -548,7 +772,8 @@ function readLocal(){
 const CFG = window.CARNET_FIREBASE_CONFIG || null;
 const cloudEnabled = !!(CFG && CFG.apiKey && CFG.projectId);
 const cloud = { phase: cloudEnabled ? 'loading' : 'disabled', api: null, auth: null, db: null, user: null, refs: null,
-  unsub: [], loaded: { lib: false, day: false }, meta: { lib: null, day: null }, foreignLocal: false, error: '' };
+  unsub: [], loaded: { lib: false, day: false, goals: false }, meta: { lib: null, day: null, goals: null }, foreignLocal: false, error: '' };
+const KEYS = ['lib', 'day', 'goals'];
 
 function makeWriter(key, build){
   let timer = null, dirty = false;
@@ -569,7 +794,8 @@ function makeWriter(key, build){
 }
 const writers = {
   lib: makeWriter('lib', () => clone({ foods: state.foods, v: 1, updatedAt: new Date().toISOString() })),
-  day: makeWriter('day', () => clone({ items: state.day, v: 1, updatedAt: new Date().toISOString() }))
+  day: makeWriter('day', () => clone({ items: state.day, v: 1, updatedAt: new Date().toISOString() })),
+  goals: makeWriter('goals', () => clone(Object.assign({}, state.goals, { v: 1, updatedAt: new Date().toISOString() })))
 };
 function save(key){
   cacheLocal();
@@ -609,11 +835,12 @@ function attachUser(user){
   const { doc, onSnapshot } = cloud.api;
   cloud.refs = {
     lib: doc(cloud.db, 'users', user.uid, 'carnet', 'library'),
-    day: doc(cloud.db, 'users', user.uid, 'carnet', 'day')
+    day: doc(cloud.db, 'users', user.uid, 'carnet', 'day'),
+    goals: doc(cloud.db, 'users', user.uid, 'carnet', 'goals')
   };
-  cloud.loaded = { lib: false, day: false };
-  cloud.meta = { lib: null, day: null };
-  ['lib', 'day'].forEach((key) => {
+  cloud.loaded = { lib: false, day: false, goals: false };
+  cloud.meta = { lib: null, day: null, goals: null };
+  KEYS.forEach((key) => {
     cloud.unsub.push(onSnapshot(cloud.refs[key], { includeMetadataChanges: true },
       (snap) => onCloudSnap(key, snap), onCloudError));
   });
@@ -621,11 +848,17 @@ function attachUser(user){
 }
 function detachUser(){
   stopListeners();
-  writers.lib.cancel(); writers.day.cancel();
-  cloud.user = null; cloud.refs = null; cloud.loaded = { lib: false, day: false }; cloud.meta = { lib: null, day: null };
+  KEYS.forEach((k) => writers[k].cancel());
+  cloud.user = null; cloud.refs = null; cloud.loaded = { lib: false, day: false, goals: false }; cloud.meta = { lib: null, day: null, goals: null };
   updateSync(); renderAccount();
 }
 function applyRemote(key, data){
+  if (key === 'goals') {
+    const gl = sanitizeGoals(data);
+    if (JSON.stringify(gl) === JSON.stringify(state.goals)) return false;
+    state.goals = gl; fillGoalInputs();
+    return true;
+  }
   if (key === 'lib') {
     const foods = sanitizeFoods(data && data.foods);
     if (JSON.stringify(foods) === JSON.stringify(state.foods)) return false;
@@ -648,14 +881,14 @@ function onCloudSnap(key, snap){
       writers[key].flush();                         // modifié avant la connexion : cet appareil a la priorité
     } else if (!exists) {
       if (cloud.foreignLocal) {                     // données d'un autre compte sur cet appareil : on ne les envoie pas
-        if (key === 'lib') state.foods = []; else state.day = [];
+        if (key === 'lib') state.foods = []; else if (key === 'day') state.day = []; else state.goals = defaultGoals();
         cacheLocal(); renderAll();
       } else {
-        const has = key === 'lib' ? state.foods.length > 0 : state.day.length > 0;
+        const has = key === 'lib' ? state.foods.length > 0 : key === 'day' ? state.day.length > 0 : hasGoalsData();
         if (has) writers[key].schedule(0);          // premier compte : on envoie ce que l'appareil contient
       }
     } else if (applyRemote(key, snap.data())) { cacheLocal(); renderAll(); }
-    if (cloud.loaded.lib && cloud.loaded.day && cloud.user) { lsSet(OWNER_KEY, cloud.user.uid); cloud.foreignLocal = false; }
+    if (KEYS.every((k) => cloud.loaded[k]) && cloud.user) { lsSet(OWNER_KEY, cloud.user.uid); cloud.foreignLocal = false; }
     updateSync(); renderAccount();
     return;
   }
@@ -681,9 +914,8 @@ function syncState(){
   if (!cloud.user) return 'signed-out';
   if (cloud.error) return 'error';
   const online = navigator.onLine !== false;
-  if (!(cloud.loaded.lib && cloud.loaded.day)) return online ? 'connecting' : 'offline';
-  const pending = writers.lib.dirty() || writers.day.dirty() ||
-    (cloud.meta.lib && cloud.meta.lib.hasPendingWrites) || (cloud.meta.day && cloud.meta.day.hasPendingWrites);
+  if (!KEYS.every((k) => cloud.loaded[k])) return online ? 'connecting' : 'offline';
+  const pending = KEYS.some((k) => writers[k].dirty() || (cloud.meta[k] && cloud.meta[k].hasPendingWrites));
   if (!online) return 'offline';
   return pending ? 'pending' : 'synced';
 }
@@ -805,14 +1037,14 @@ $('btn-reset').addEventListener('click', async () => {
 });
 $('btn-logout').addEventListener('click', async () => {
   // On envoie d'abord ce qui attend encore, puis on se déconnecte. Les données restent sur l'appareil.
-  writers.lib.flush(); writers.day.flush();
+  KEYS.forEach((k) => writers[k].flush());
   try { await cloud.api.signOut(cloud.auth); toast('Déconnecté. Tes données restent sur cet appareil.'); } catch (e) { toast('Déconnexion impossible pour l’instant.'); }
 });
 
 /* ----- Sauvegarde ----- */
 function backupMsg(t, kind){ const m = $('backup-msg'); m.textContent = t || ''; m.className = 'msg' + (kind ? ' ' + kind : ''); }
 $('btn-export').addEventListener('click', () => {
-  const data = { app: 'carnet-macros', v: 1, exportedAt: new Date().toISOString(), foods: state.foods, day: state.day };
+  const data = { app: 'carnet-macros', v: 2, exportedAt: new Date().toISOString(), foods: state.foods, day: state.day, goals: state.goals };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -829,7 +1061,7 @@ $('import-file').addEventListener('change', async (e) => {
     const o = JSON.parse(await file.text());
     const foods = sanitizeFoods(o.foods), day = sanitizeDay(o.day || o.items);
     if (!foods.length && !day.length) throw new Error('vide');
-    pendingImport = { foods, day };
+    pendingImport = { foods, day, goals: o.goals ? sanitizeGoals(o.goals) : null };
     $('import-text').textContent = 'Remplacer tes ' + plural(state.foods.length, 'aliment', 'aliments') + ' et ta journée par ceux du fichier (' +
       plural(foods.length, 'aliment', 'aliments') + ', ' + plural(day.length, 'ligne', 'lignes') + ' de journée) ?';
     $('import-confirm').hidden = false; backupMsg('');
@@ -840,12 +1072,14 @@ $('import-file').addEventListener('change', async (e) => {
 $('btn-import-cancel').addEventListener('click', () => { pendingImport = null; $('import-confirm').hidden = true; });
 $('btn-import-ok').addEventListener('click', () => {
   if (!pendingImport) return;
-  const before = { foods: state.foods, day: state.day };
-  state.foods = pendingImport.foods; state.day = pendingImport.day; pendingImport = null;
+  const before = { foods: state.foods, day: state.day, goals: state.goals };
+  state.foods = pendingImport.foods; state.day = pendingImport.day;
+  if (pendingImport.goals) state.goals = pendingImport.goals;
+  pendingImport = null;
   $('import-confirm').hidden = true;
-  renderAll(); save('lib'); save('day');
+  fillGoalInputs(); renderAll(); save('lib'); save('day'); save('goals');
   backupMsg('Import terminé : ' + plural(state.foods.length, 'aliment', 'aliments') + '.', 'ok');
-  toast('Données importées', { label: 'Annuler', fn: () => { state.foods = before.foods; state.day = before.day; renderAll(); save('lib'); save('day'); backupMsg(''); } });
+  toast('Données importées', { label: 'Annuler', fn: () => { state.foods = before.foods; state.day = before.day; state.goals = before.goals; fillGoalInputs(); renderAll(); save('lib'); save('day'); save('goals'); backupMsg(''); } });
 });
 
 /* ----- Installation ----- */
@@ -897,6 +1131,19 @@ function renderTotals(){
   $('m-kcal').textContent = nf0.format(t.kcal);
   $('m-p').textContent = nf0.format(t.p); $('m-g').textContent = nf0.format(t.g);
   $('m-l').textContent = nf0.format(t.l); $('m-f').textContent = nf0.format(t.f);
+  const T = activeTargets();
+  document.querySelector('.label').classList.toggle('has-t', !!T);
+  if (T) {
+    ['p', 'g', 'l', 'f'].forEach((k) => {
+      $('tg-' + k).textContent = '/ ' + nf0.format(T[k]);
+      $('br-' + k).style.width = (T[k] ? Math.min(100, t[k] / T[k] * 100) : 0) + '%';
+    });
+    const rest = T.kcal - t.kcal;
+    $('t-kcal-t').textContent = 'Objectif ' + nf0.format(T.kcal) + ' kcal · ' + (rest >= 0 ? 'reste ' + nf0.format(rest) : 'dépassé de ' + nf0.format(-rest));
+    $('br-kcal').style.width = (T.kcal ? Math.min(100, t.kcal / T.kcal * 100) : 0) + '%';
+    $('br-kcal-w').classList.toggle('over', t.kcal > T.kcal * 1.03);
+    $('m-kcal-t').textContent = ' / ' + nf0.format(T.kcal);
+  } else $('m-kcal-t').textContent = '';
 }
 function dayRowHTML(it){
   const m = itemMacros(it); if (!m) return '';
@@ -965,7 +1212,7 @@ function renderAll(){
   const a = document.activeElement, aid = a && a.id;
   let s0 = null, s1 = null;
   try { if (a && a.selectionStart != null) { s0 = a.selectionStart; s1 = a.selectionEnd; } } catch (e) {}
-  renderDay(); renderLib(); renderTotals();
+  renderDay(); renderLib(); renderTotals(); renderGoalOutputs();
   const el = aid && $(aid);
   if (el && document.activeElement !== el) { el.focus(); try { if (s0 != null) el.setSelectionRange(s0, s1); } catch (e) {} }
 }
@@ -975,10 +1222,11 @@ function renderAll(){
    ========================================================= */
 function setTab(){
   const h = location.hash.replace('#', '');
-  const t = ['journee', 'aliments', 'compte'].includes(h) ? h : 'journee';
+  const t = ['journee', 'aliments', 'objectifs', 'compte'].includes(h) ? h : 'journee';
   document.body.dataset.tab = t;
   document.querySelectorAll('[data-tab]').forEach((a) => { if (a.tagName === 'A') a.setAttribute('aria-selected', String(a.dataset.tab === t)); });
   if (t === 'compte') { updateSync(); renderAccount(); renderInstall(); }
+  if (t === 'objectifs' && state.goals) { fillGoalInputs(); renderGoalOutputs(); }
 }
 window.addEventListener('hashchange', () => { setTab(); window.scrollTo(0, 0); });
 
@@ -1222,6 +1470,333 @@ $('dlg-form').addEventListener('submit', (e) => {
   else { renderAll(); toast(created ? '« ' + name + ' » enregistré' : '« ' + name + ' » mis à jour'); }
 });
 
+
+/* =========================================================
+   Objectifs : profil, dépense énergétique, répartition, suivi du poids
+   (références complètes dans la carte « Sources et limites » de l'onglet)
+   ========================================================= */
+const GOALS = {
+  perte:    { label: 'Perte de poids', rate: -0.75, band: [-1, -0.5],    p: 1.6, fat: 30 },
+  seche:    { label: 'Sèche',          rate: -0.7,  band: [-1, -0.5],    p: 2.2, fat: 25 },
+  maintien: { label: 'Maintien',       rate: 0,     band: [-0.25, 0.25], p: 1.8, fat: 25 },
+  masse:    { label: 'Prise de masse', rate: 0.35,  band: [0.25, 0.5],   p: 1.8, fat: 25 }
+};
+const KCAL_PER_KG = 7700;            // ordre de grandeur usuel (Hall, 2008) : approximation, à corriger par le suivi
+const MINUS = '−';
+const nfFix = (n, d) => new Intl.NumberFormat('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }).format(n);
+const signed = (n, d) => (n > 0 ? '+' : n < 0 ? MINUS : '') + nfFix(Math.abs(n), d);
+const toField = (v) => v == null ? '' : String(v).replace('.', ',');
+const todayStr = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const dayNum = (s) => Math.round(Date.parse(s + 'T00:00:00Z') / 86400000);
+const fmtDate = (s, long) => new Intl.DateTimeFormat('fr-FR', long ? { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' } : { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(s + 'T00:00:00Z'));
+
+function defaultGoals(){
+  return { profile: { sex: 'm', age: null, height: null, weight: null, bf: null, pal: 1.55 },
+    goal: 'maintien', rate: 0, pPerKg: 1.8, fatPct: 25, fiber: 30, showInDay: true, weights: [] };
+}
+function numOrNull(x, lo, hi){
+  if (x === null || x === undefined || x === '') return null;
+  const n = Number(x); if (!Number.isFinite(n)) return null;
+  return Math.min(hi, Math.max(lo, n));
+}
+function sanitizeGoals(o){
+  const d = defaultGoals();
+  if (!o || typeof o !== 'object') return d;
+  const pr = o.profile || {};
+  d.profile = {
+    sex: pr.sex === 'f' ? 'f' : 'm',
+    age: numOrNull(pr.age, 10, 110), height: numOrNull(pr.height, 100, 250),
+    weight: numOrNull(pr.weight, 25, 350), bf: numOrNull(pr.bf, 2, 70),
+    pal: numOrNull(pr.pal, 1.2, 2.4) || 1.55
+  };
+  d.goal = GOALS[o.goal] ? o.goal : 'maintien';
+  const r = numOrNull(o.rate, -1, 0.75); d.rate = r == null ? GOALS[d.goal].rate : r;
+  d.pPerKg = numOrNull(o.pPerKg, 0.8, 3.2) || GOALS[d.goal].p;
+  d.fatPct = numOrNull(o.fatPct, 15, 40) || GOALS[d.goal].fat;
+  const fib = numOrNull(o.fiber, 0, 80); d.fiber = fib == null ? 30 : fib;
+  d.showInDay = o.showInDay !== false;
+  const seen = new Map();
+  (Array.isArray(o.weights) ? o.weights : []).forEach((w) => {
+    if (!w || !/^\d{4}-\d{2}-\d{2}$/.test(w.d)) return;
+    const kg = Number(w.kg); if (!Number.isFinite(kg) || kg < 20 || kg > 400) return;
+    seen.set(w.d, Math.round(kg * 10) / 10);
+  });
+  d.weights = [...seen.entries()].sort((a, b) => (a[0] < b[0] ? -1 : 1)).slice(-1500).map(([dd, kg]) => ({ d: dd, kg }));
+  return d;
+}
+const hasGoalsData = () => !!(state.goals && (state.goals.profile.age || state.goals.profile.weight || state.goals.weights.length));
+
+/* ----- Équations du métabolisme de repos (kcal/jour) ----- */
+function bmrList(pr){
+  const { sex, age: A, height: H, weight: W, bf } = pr;
+  if (!(A && H && W)) return [];
+  const male = sex === 'm', Hm = H / 100, KJ = 4.184;
+  let schofield;
+  if (male) schofield = A < 30 ? 15.057 * W + 692.2 : A < 60 ? 11.472 * W + 873.1 : 11.711 * W + 587.7;
+  else schofield = A < 30 ? 14.818 * W + 486.6 : A < 60 ? 8.126 * W + 845.6 : 9.082 * W + 658.5;
+  const athleteAge = A >= 18 && A <= 35;
+  const list = [
+    { name: 'Mifflin-St Jeor', ref: 'Mifflin et al., 1990', kcal: 10 * W + 6.25 * H - 5 * A + (male ? 5 : -161) },
+    { name: 'Harris-Benedict révisée', ref: 'Roza et Shizgal, 1984', kcal: male ? 88.362 + 13.397 * W + 4.799 * H - 5.677 * A : 447.593 + 9.247 * W + 3.098 * H - 4.330 * A },
+    { name: 'Black et al.', ref: 'Black et al., 1996 · très utilisée en France', kcal: (male ? 1.083 : 0.963) * Math.pow(W, 0.48) * Math.pow(Hm, 0.5) * Math.pow(A, -0.13) * 239.006 },
+    { name: 'OMS / FAO (Schofield)', ref: 'Schofield, 1985 ; FAO/OMS/UNU, 2004', kcal: schofield },
+    { name: 'ten Haaf et Weijs, sportifs', ref: 'ten Haaf et Weijs, 2014 · 18–35 ans', kcal: (49.940 * W + 2459.053 * Hm - 34.014 * A + 799.257 * (male ? 1 : 0) + 122.502) / KJ, off: !athleteAge }
+  ];
+  if (bf) {
+    const ffm = W * (1 - bf / 100);
+    list.push({ name: 'Cunningham, masse maigre', ref: 'Cunningham, 1980', kcal: 500 + 22 * ffm });
+    list.push({ name: 'ten Haaf et Weijs, masse maigre', ref: 'ten Haaf et Weijs, 2014 · 18–35 ans', kcal: (95.272 * ffm + 2026.161) / KJ, off: !athleteAge });
+  }
+  return list;
+}
+function median(arr){ const s = arr.slice().sort((a, b) => a - b), n = s.length; return n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2; }
+function computePlan(g = state.goals){
+  const pr = g.profile;
+  if (!(pr.age && pr.height && pr.weight)) return null;
+  const list = bmrList(pr), used = list.filter((x) => !x.off);
+  if (!used.length) return null;
+  const vals = used.map((x) => x.kcal);
+  const bmr = median(vals), tdee = bmr * pr.pal;
+  const kgWeek = g.rate / 100 * pr.weight;
+  const adj = kgWeek * KCAL_PER_KG / 7;
+  const kcal = Math.max(0, tdee + adj);
+  const p = g.pPerKg * pr.weight, l = g.fatPct / 100 * kcal / 9, c = (kcal - 4 * p - 9 * l) / 4;
+  return { list, n: used.length, bmr, lo: Math.min(...vals), hi: Math.max(...vals), tdee, kgWeek, adj, kcal, p, l, c, f: g.fiber,
+    ffm: pr.bf ? pr.weight * (1 - pr.bf / 100) : null };
+}
+function activeTargets(){
+  const g = state.goals; if (!g || !g.showInDay) return null;
+  const pl = computePlan(g); if (!pl) return null;
+  return { kcal: Math.round(pl.kcal / 10) * 10, p: Math.round(pl.p), g: Math.max(0, Math.round(pl.c)), l: Math.round(pl.l), f: pl.f };
+}
+const palCategory = (v) => v < 1.4 ? 'sous la catégorie « sédentaire »' : v < 1.7 ? 'sédentaire ou léger' : v < 2.0 ? 'actif' : 'très actif';
+const palBand = (v) => v < 1.4 ? [1.2, 1.4] : v < 1.7 ? [1.4, 1.69] : v < 2.0 ? [1.7, 1.99] : [2.0, 2.4];
+function setTrack(input, lo, hi, tick){
+  const min = +input.min, max = +input.max;
+  const pct = (v) => Math.max(0, Math.min(100, (v - min) / (max - min) * 100)).toFixed(2) + '%';
+  let bg = 'linear-gradient(to right, var(--rule) 0 ' + pct(lo) + ', var(--band) ' + pct(lo) + ' ' + pct(hi) + ', var(--rule) ' + pct(hi) + ' 100%)';
+  if (tick != null) bg = 'linear-gradient(to right, transparent calc(' + pct(tick) + ' - 1.5px), var(--ink) calc(' + pct(tick) + ' - 1.5px) calc(' + pct(tick) + ' + 1.5px), transparent calc(' + pct(tick) + ' + 1.5px)), ' + bg;
+  input.style.setProperty('--track', bg);
+}
+function proteinBand(g, plan){
+  const deficit = g.goal === 'perte' || g.goal === 'seche';
+  if (deficit && plan && plan.ffm) return { lo: 2.3 * plan.ffm / g.profile.weight, hi: 3.1 * plan.ffm / g.profile.weight, helms: true };
+  return { lo: 1.4, hi: 2.0, helms: false };
+}
+
+/* ----- Rendu de l'onglet ----- */
+function fillGoalInputs(){
+  const g = state.goals, pr = g.profile, act = document.activeElement;
+  const setIf = (id, v) => { const el = $(id); if (el && el !== act) { el.value = v; if (el.parentNode.classList) el.parentNode.classList.remove('bad'); } };
+  setIf('g-age', toField(pr.age)); setIf('g-height', toField(pr.height));
+  setIf('g-weight', toField(pr.weight)); setIf('g-bf', toField(pr.bf));
+  setIf('g-pal', pr.pal); setIf('g-rate', g.rate); setIf('g-prot', g.pPerKg); setIf('g-fat', g.fatPct);
+  $('g-show').checked = g.showInDay;
+  const wd = $('w-date'); wd.max = todayStr(); if (!wd.value) wd.value = todayStr();
+}
+function renderGoalOutputs(){
+  const g = state.goals, pr = g.profile, plan = computePlan(g), meta = GOALS[g.goal];
+  document.querySelectorAll('[data-sex]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.sex === pr.sex)));
+  document.querySelectorAll('[data-goal]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.goal === g.goal)));
+  document.querySelectorAll('[data-pal]').forEach((b) => b.setAttribute('aria-pressed', String(palCategory(+b.dataset.pal) === palCategory(pr.pal))));
+
+  // Activité
+  $('g-pal-v').textContent = 'PAL ' + nfFix(pr.pal, 2) + ' · ' + palCategory(pr.pal);
+  const pb = palBand(pr.pal); setTrack($('g-pal'), pb[0], pb[1]);
+  $('g-pal-reco').innerHTML = 'Repères FAO/OMS/UNU (2004) : <b>1,40–1,69</b> sédentaire ou léger, <b>1,70–1,99</b> actif, <b>2,00–2,40</b> très actif ; au-delà de 2,40, difficile à tenir dans la durée. Le PAL inclut déjà ton sport : n’ajoute pas les calories de tes séances.';
+
+  // Dépense
+  if (!plan) {
+    $('exp-body').innerHTML = '<p class="muted">Renseigne ton âge, ta taille et ton poids dans « Profil » : le calcul se fait tout seul.</p>';
+  } else {
+    const rows = plan.list.map((x) => '<tr' + (x.off ? ' class="off"' : '') + '><td>' + esc(x.name) + '<small>' + esc(x.ref) + (x.off ? ' · hors champ, non retenue' : '') + '</small></td><td>' + nf0.format(x.kcal) + '</td></tr>').join('');
+    $('exp-body').innerHTML =
+      '<table class="formula"><tbody>' + rows +
+      '<tr class="cons"><td>Consensus<small>médiane des ' + plan.n + ' équations retenues · écart ' + nf0.format(plan.lo) + '–' + nf0.format(plan.hi) + '</small></td><td>' + nf0.format(plan.bmr) + '</td></tr>' +
+      '</tbody></table>' +
+      '<p class="tdee">Métabolisme de repos × PAL ' + nfFix(pr.pal, 2) + ' = <b>' + nf0.format(plan.tdee) + '</b> kcal par jour pour maintenir ton poids.</p>' +
+      (pr.bf ? '' : '<p class="reco">Ajoute ta masse grasse pour inclure les équations basées sur la masse maigre : chez des sportifs de 18 à 35 ans, celle de Cunningham s’est montrée aussi précise que la meilleure équation au poids <span class="cite">(ten Haaf et Weijs, 2014)</span>.</p>');
+  }
+
+  // Rythme
+  $('g-rate-v').textContent = signed(g.rate, 2) + ' % du poids / semaine';
+  setTrack($('g-rate'), meta.band[0], meta.band[1], 0);
+  let rateTxt = '';
+  if (g.goal === 'perte' || g.goal === 'seche') rateTxt = 'Repère : <span class="zone"></span><b>0,5 à 1 %</b> du poids par semaine pour préserver le muscle <span class="cite">(Helms et al., 2014)</span> ; chez des athlètes, 0,7 %/semaine a mieux préservé la masse maigre que 1,4 % <span class="cite">(Garthe et al., 2011)</span>.';
+  else if (g.goal === 'masse') rateTxt = 'Repère : <span class="zone"></span><b>+0,25 à 0,5 %</b> du poids par semaine, soit un surplus d’environ 10 à 20 %, pour limiter la prise de gras <span class="cite">(Iraki et al., 2019)</span>.';
+  else rateTxt = 'Poids stable : l’apport couvre la dépense estimée. <span class="zone"></span>Zone de stabilité indicative.';
+  if (plan) {
+    rateTxt += '<br>Soit <b>' + signed(plan.kgWeek, 2) + ' kg</b>/semaine et <b>' + signed(plan.adj, 0) + ' kcal</b>/jour par rapport au maintien' +
+      (g.goal === 'masse' && plan.tdee ? ' (surplus de ' + nf0.format(plan.adj / plan.tdee * 100) + ' %)' : '') +
+      ' ; calcul sur la base d’environ 7 700 kcal par kg, une approximation <span class="cite">(Hall, 2008)</span>.';
+  }
+  $('g-rate-reco').innerHTML = rateTxt;
+
+  // Protéines
+  const band = proteinBand(g, plan);
+  setTrack($('g-prot'), band.lo, band.hi, 1.6);
+  $('g-prot-v').textContent = nfFix(g.pPerKg, 1) + ' g/kg' + (plan ? ' · ' + nf0.format(plan.p) + ' g' : '');
+  let protTxt;
+  if (band.helms) protTxt = 'Repère en déficit : <span class="zone"></span><b>2,3 à 3,1 g par kg de masse maigre</b> <span class="cite">(Helms et al., 2014)</span>, soit ' + nfFix(band.lo, 1) + ' à ' + nfFix(band.hi, 1) + ' g/kg de ton poids.';
+  else protTxt = 'Repère : <span class="zone"></span><b>1,4 à 2,0 g/kg</b> pour une personne qui s’entraîne <span class="cite">(ISSN, Jäger et al., 2017)</span>.';
+  protTxt += ' Trait noir : 1,6 g/kg, seuil au-delà duquel une méta-analyse ne trouve plus de gain de masse maigre en moyenne <span class="cite">(Morton et al., 2018)</span>.';
+  if ((g.goal === 'perte' || g.goal === 'seche') && !band.helms) protTxt += ' En déficit, l’ISSN et Helms et al. visent plus haut (2,3 à 3,1 g/kg de masse maigre) : indique ta masse grasse pour le calculer.';
+  $('g-prot-reco').innerHTML = protTxt;
+
+  // Lipides
+  setTrack($('g-fat'), 20, 35);
+  $('g-fat-v').textContent = nf0.format(g.fatPct) + ' % des kcal' + (plan ? ' · ' + nf0.format(plan.l) + ' g' : '');
+  $('g-fat-reco').innerHTML = 'Repère sportif : <span class="zone"></span><b>20 à 35 %</b> des calories, sans descendre sous 20 % <span class="cite">(ACSM, Thomas et al., 2016)</span>. Pour la population générale, l’ANSES retient 35 à 40 % ; en préparation de compétition, Helms et al. (2014) admettent 15 à 30 %.' +
+    (plan ? ' Ici : ' + nfFix(plan.l / pr.weight, 1) + ' g/kg.' : '');
+
+  // Glucides
+  if (plan) {
+    const c = Math.max(0, plan.c);
+    $('g-carb-v').textContent = nf0.format(c) + ' g · ' + nfFix(c / pr.weight, 1) + ' g/kg';
+  } else $('g-carb-v').textContent = '–';
+  $('g-carb-reco').innerHTML = 'Repère sportif : <b>3 à 5 g/kg</b> pour un entraînement léger, <b>5 à 7 g/kg</b> pour environ une heure d’exercice modéré par jour <span class="cite">(ACSM, Thomas et al., 2016)</span>.';
+
+  // Avertissements
+  const warn = [];
+  if (pr.age && (pr.age < 18 || pr.age > 80)) warn.push(['bad', 'Ces équations et repères concernent les adultes : pour un âge inférieur à 18 ans, demande l’avis d’un professionnel de santé.']);
+  if (plan) {
+    if (plan.kcal < plan.bmr) warn.push(['bad', 'Objectif sous ton métabolisme de repos estimé (' + nf0.format(plan.bmr) + ' kcal) : déficit très agressif. Ralentis le rythme visé.']);
+    if (plan.c < 0) warn.push(['bad', 'Protéines et lipides dépassent à eux seuls l’objectif calorique : baisse l’un des deux.']);
+    else if (plan.c / pr.weight < 3) warn.push(['', 'Glucides sous 3 g/kg : bas pour un entraînement régulier selon l’ACSM.']);
+  }
+  if (g.fatPct < 20) warn.push(['', 'Lipides sous 20 % des calories : en dessous du repère ACSM.']);
+  $('g-warn').innerHTML = warn.map(([k, t]) => '<p class="note' + (k ? ' ' + k : '') + '">' + esc(t) + '</p>').join('');
+
+  // Résultat
+  if (!plan) {
+    $('res-body').innerHTML = '<p class="muted">Remplis « Profil » (âge, taille, poids) et choisis un objectif : ton apport cible et sa répartition s’affichent ici, et dans l’étiquette de ta journée.</p>';
+  } else {
+    const T = { kcal: Math.round(plan.kcal / 10) * 10, p: Math.round(plan.p), g: Math.max(0, Math.round(plan.c)), l: Math.round(plan.l) };
+    $('res-body').innerHTML =
+      '<div class="res-kcal"><span class="big">' + nf0.format(T.kcal) + '</span><span>kcal par jour · ' + esc(meta.label.toLowerCase()) + '</span></div>' +
+      '<div class="tiles">' +
+        '<div class="tile m-p"><b>' + nf0.format(T.p) + ' g</b><span><i class="dot"></i>Protéines</span></div>' +
+        '<div class="tile m-g"><b>' + nf0.format(T.g) + ' g</b><span><i class="dot"></i>Glucides</span></div>' +
+        '<div class="tile m-l"><b>' + nf0.format(T.l) + ' g</b><span><i class="dot"></i>Lipides</span></div>' +
+        '<div class="tile m-f"><b>' + nf0.format(plan.f) + ' g</b><span><i class="dot"></i>Fibres</span></div>' +
+      '</div>' +
+      '<p class="reco">Maintien estimé ' + nf0.format(plan.tdee) + ' kcal, ' + signed(plan.adj, 0) + ' kcal/jour pour viser ' + signed(plan.kgWeek, 2) + ' kg/semaine.</p>';
+    $('mg-kcal').textContent = nf0.format(T.kcal);
+    $('mg-p').textContent = nf0.format(T.p); $('mg-g').textContent = nf0.format(T.g); $('mg-l').textContent = nf0.format(T.l); $('mg-f').textContent = nf0.format(plan.f);
+  }
+  if (!plan) { ['mg-kcal', 'mg-p', 'mg-g', 'mg-l', 'mg-f'].forEach((id) => { $(id).textContent = '–'; }); }
+
+  renderWeights(plan);
+}
+
+/* ----- Suivi du poids ----- */
+function weightTrend(){
+  const ws = state.goals.weights; if (ws.length < 3) return null;
+  const last = dayNum(ws[ws.length - 1].d);
+  const pts = ws.filter((w) => dayNum(w.d) >= last - 27);
+  if (pts.length < 3) return null;
+  const xs = pts.map((w) => dayNum(w.d)), ys = pts.map((w) => w.kg);
+  const span = xs[xs.length - 1] - xs[0]; if (span < 7) return null;
+  const mx = xs.reduce((a, b) => a + b, 0) / xs.length, my = ys.reduce((a, b) => a + b, 0) / ys.length;
+  let num = 0, den = 0; xs.forEach((x, i) => { num += (x - mx) * (ys[i] - my); den += (x - mx) * (x - mx); });
+  const kgWeek = den ? num / den * 7 : 0;
+  return { kgWeek, pct: kgWeek / my * 100, days: span + 1, n: pts.length };
+}
+function renderWeights(plan){
+  const g = state.goals, ws = g.weights;
+  // Liste
+  $('w-list').innerHTML = ws.slice(-8).reverse().map((w) =>
+    '<li><span class="d">' + esc(fmtDate(w.d, true)) + '</span><span class="num">' + nfFix(w.kg, 1) + ' kg</span>' +
+    '<button type="button" class="icon-btn" data-wdel="' + esc(w.d) + '" aria-label="Supprimer la pesée du ' + esc(fmtDate(w.d, true)) + '">×</button></li>').join('');
+  // Tendance
+  const tr = weightTrend();
+  if (!ws.length) $('w-trend').innerHTML = '<span class="muted">Pèse-toi plusieurs fois par semaine, dans les mêmes conditions (par exemple le matin) : la tendance apparaît après une semaine.</span>';
+  else if (!tr) $('w-trend').innerHTML = '<span class="muted">Encore quelques pesées sur au moins une semaine pour calculer la tendance.</span>';
+  else {
+    const diff = tr.pct - g.rate;
+    const st = Math.abs(diff) <= 0.2 ? '<span class="status ok">dans le rythme visé</span>'
+      : (g.rate < 0 ? (diff > 0 ? '<span class="status warn">plus lent que visé</span>' : '<span class="status warn">plus rapide que visé</span>')
+        : g.rate > 0 ? (diff < 0 ? '<span class="status warn">plus lent que visé</span>' : '<span class="status warn">plus rapide que visé</span>')
+        : '<span class="status warn">' + (diff < 0 ? 'en baisse' : 'en hausse') + '</span>');
+    $('w-trend').innerHTML = 'Tendance sur ' + tr.days + ' jours : <b>' + signed(tr.kgWeek, 2) + ' kg</b>/semaine (' + signed(tr.pct, 2) + ' %), pour un rythme visé de ' + signed(g.rate, 2) + ' %. ' + st +
+      '<br><span class="reco">Une pesée isolée varie avec l’eau et le contenu digestif ; Iraki et al. (2019) conseillent de raisonner sur des moyennes hebdomadaires. Si l’écart dure plusieurs semaines, ajuste le rythme visé.</span>';
+  }
+  // Courbe
+  const box = $('w-chart');
+  if (ws.length < 2) { box.innerHTML = ''; return; }
+  const lastD = dayNum(ws[ws.length - 1].d);
+  const pts = ws.filter((w) => dayNum(w.d) >= lastD - 89);
+  if (pts.length < 2) { box.innerHTML = ''; return; }
+  const W = 600, H = 210, L = 44, R = 14, T = 12, B = 28;
+  const x0 = dayNum(pts[0].d), x1 = Math.max(x0 + 1, lastD);
+  const avg = pts.map((p) => { const d = dayNum(p.d); const win = pts.filter((q) => { const e = dayNum(q.d); return e <= d && e > d - 7; }); return { d, kg: win.reduce((a, q) => a + q.kg, 0) / win.length }; });
+  const goalLine = [{ d: x0, kg: avg[0].kg }, { d: x1, kg: avg[0].kg * (1 + g.rate / 100 * (x1 - x0) / 7) }];
+  const all = pts.map((p) => p.kg).concat(goalLine.map((p) => p.kg));
+  let y0 = Math.min(...all), y1 = Math.max(...all); const padY = Math.max(0.4, (y1 - y0) * 0.12); y0 -= padY; y1 += padY;
+  const sx = (d) => L + (d - x0) / (x1 - x0) * (W - L - R);
+  const sy = (kg) => T + (y1 - kg) / (y1 - y0) * (H - T - B);
+  const ticks = [y0 + padY, (y0 + y1) / 2, y1 - padY];
+  let svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Évolution du poids sur les ' + (x1 - x0 + 1) + ' derniers jours">';
+  ticks.forEach((v) => { svg += '<line class="wc-grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + sy(v).toFixed(1) + '" y2="' + sy(v).toFixed(1) + '"/><text class="wc-lbl" x="' + (L - 6) + '" y="' + (sy(v) + 4).toFixed(1) + '" text-anchor="end">' + nfFix(v, 1) + '</text>'; });
+  svg += '<path class="wc-goal" d="M' + sx(goalLine[0].d).toFixed(1) + ' ' + sy(goalLine[0].kg).toFixed(1) + ' L' + sx(goalLine[1].d).toFixed(1) + ' ' + sy(goalLine[1].kg).toFixed(1) + '"/>';
+  pts.forEach((p) => { svg += '<circle class="wc-dot" r="3" cx="' + sx(dayNum(p.d)).toFixed(1) + '" cy="' + sy(p.kg).toFixed(1) + '"/>'; });
+  svg += '<path class="wc-avg" d="' + avg.map((a, i) => (i ? 'L' : 'M') + sx(a.d).toFixed(1) + ' ' + sy(a.kg).toFixed(1)).join(' ') + '"/>';
+  const la = avg[avg.length - 1];
+  svg += '<circle class="wc-last" r="5" cx="' + sx(la.d).toFixed(1) + '" cy="' + sy(la.kg).toFixed(1) + '"/>';
+  svg += '<text class="wc-lbl" x="' + L + '" y="' + (H - 8) + '">' + esc(fmtDate(pts[0].d)) + '</text><text class="wc-lbl" x="' + (W - R) + '" y="' + (H - 8) + '" text-anchor="end">' + esc(fmtDate(ws[ws.length - 1].d)) + '</text>';
+  svg += '</svg>';
+  box.innerHTML = svg + '<div class="legend"><span><i></i>moyenne sur 7 jours (' + nfFix(la.kg, 1) + ' kg)</span><span><i class="g"></i>rythme visé</span><span>• pesées</span></div>';
+}
+
+/* ----- Saisie ----- */
+function goalsChanged(){ renderGoalOutputs(); renderTotals(); save('goals'); }
+function applyGoalPreset(key){
+  const g = state.goals, m = GOALS[key]; if (!m) return;
+  g.goal = key; g.rate = m.rate; g.pPerKg = m.p; g.fatPct = m.fat;
+  fillGoalInputs(); goalsChanged();
+}
+document.querySelectorAll('[data-sex]').forEach((b) => b.addEventListener('click', () => { state.goals.profile.sex = b.dataset.sex; goalsChanged(); }));
+document.querySelectorAll('[data-goal]').forEach((b) => b.addEventListener('click', () => applyGoalPreset(b.dataset.goal)));
+document.querySelectorAll('[data-pal]').forEach((b) => b.addEventListener('click', () => { state.goals.profile.pal = +b.dataset.pal; $('g-pal').value = b.dataset.pal; goalsChanged(); }));
+[['g-age', 'age', 14, 100, 0], ['g-height', 'height', 120, 230, 0], ['g-weight', 'weight', 30, 300, 1], ['g-bf', 'bf', 3, 60, 1]].forEach(([id, key, lo, hi, dec]) => {
+  const el = $(id);
+  const read = () => {
+    const raw = el.value.trim();
+    if (raw === '') return { ok: true, v: null };
+    const n = parseNum(raw);
+    return Number.isFinite(n) && n >= lo && n <= hi ? { ok: true, v: dec ? Math.round(n * 10) / 10 : Math.round(n) } : { ok: false };
+  };
+  el.addEventListener('input', () => { const r = read(); if (r.ok) { el.parentNode.classList.remove('bad'); state.goals.profile[key] = r.v; goalsChanged(); } });
+  el.addEventListener('change', () => { el.parentNode.classList.toggle('bad', !read().ok); });
+});
+$('g-pal').addEventListener('input', (e) => { state.goals.profile.pal = +e.target.value; goalsChanged(); });
+$('g-rate').addEventListener('input', (e) => { state.goals.rate = Math.round(+e.target.value * 100) / 100; goalsChanged(); });
+$('g-prot').addEventListener('input', (e) => { state.goals.pPerKg = Math.round(+e.target.value * 10) / 10; goalsChanged(); });
+$('g-fat').addEventListener('input', (e) => { state.goals.fatPct = +e.target.value; goalsChanged(); });
+$('g-reset').addEventListener('click', () => { applyGoalPreset(state.goals.goal); toast('Valeurs recommandées pour « ' + GOALS[state.goals.goal].label + ' »'); });
+$('g-show').addEventListener('change', (e) => { state.goals.showInDay = e.target.checked; goalsChanged(); });
+function wMsg(t, kind){ const m = $('w-msg'); m.textContent = t || ''; m.className = 'msg' + (kind ? ' ' + kind : ''); }
+$('w-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const d = $('w-date').value || todayStr(), kg = parseNum($('w-kg').value);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(d) || d > todayStr()) { wMsg('Choisis une date valide (pas dans le futur).', 'err'); return; }
+  if (!Number.isFinite(kg) || kg < 25 || kg > 350) { wMsg('Indique ton poids en kg, par exemple 80,4.', 'err'); $('w-kg').focus(); return; }
+  const g = state.goals, before = g.weights.map((w) => ({ ...w })), beforeW = g.profile.weight, v = Math.round(kg * 10) / 10;
+  const i = g.weights.findIndex((w) => w.d === d);
+  if (i >= 0) g.weights[i].kg = v; else { g.weights.push({ d, kg: v }); g.weights.sort((a, b) => (a.d < b.d ? -1 : 1)); }
+  if (g.weights[g.weights.length - 1].d === d) g.profile.weight = v;
+  $('w-kg').value = ''; wMsg('');
+  fillGoalInputs(); goalsChanged();
+  toast('Pesée enregistrée : ' + nfFix(v, 1) + ' kg', { label: 'Annuler', fn: () => { g.weights = before; g.profile.weight = beforeW; fillGoalInputs(); goalsChanged(); } });
+});
+$('w-list').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-wdel]'); if (!b) return;
+  const g = state.goals, before = g.weights.map((w) => ({ ...w })), beforeW = g.profile.weight;
+  g.weights = g.weights.filter((w) => w.d !== b.dataset.wdel);
+  goalsChanged();
+  toast('Pesée supprimée', { label: 'Annuler', fn: () => { g.weights = before; g.profile.weight = beforeW; fillGoalInputs(); goalsChanged(); } });
+});
+
 /* =========================================================
    Toast
    ========================================================= */
@@ -1240,6 +1815,7 @@ function toast(msg, action){
 $('app-version').textContent = APP_VERSION;
 setTab();
 readLocal();
+fillGoalInputs();
 renderAll();
 renderInstall();
 initCloud();

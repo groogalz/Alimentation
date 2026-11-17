@@ -113,6 +113,20 @@ C'est fini : chaque modification arrive sur l'autre appareil quelques secondes a
 
 ---
 
+## Onglet Objectifs
+
+Renseigne ton profil (sexe, âge, taille, poids, et ta masse grasse si tu la connais), ton niveau d'activité et ton objectif (perte de poids, sèche, maintien, prise de masse). L'app :
+
+- calcule ton métabolisme de repos avec plusieurs équations publiées et retient leur médiane ;
+- en déduit ta dépense quotidienne, puis ton apport cible selon le rythme visé ;
+- répartit cet apport avec des curseurs (protéines en g/kg, lipides en % des calories, glucides en reste), chacun avec sa zone recommandée et sa source ;
+- affiche ces objectifs dans l'étiquette de ta journée (objectif, reste, barres de progression) ;
+- suit ton poids : pesées datées, courbe avec moyenne sur 7 jours, tendance comparée au rythme visé.
+
+La carte « Sources et limites », en bas de l'onglet, donne les références complètes. Ces données sont synchronisées comme le reste : aucune étape supplémentaire dans Firebase.
+
+---
+
 ## Installer l'app sur le téléphone
 
 - **iPhone (Safari)** : bouton Partager, puis « Sur l'écran d'accueil ».
